@@ -124,7 +124,7 @@ function getConfig() {
 
 function configBackendAddress() {
   backendAddress = window.prompt(
-    "Escriba la dirección del arduino (ej: http://192.168.50.100)"
+    "Escriba la dirección del arduino (actual--> 192.168.1.100)"
   );
 
   if (backendAddress.slice(-1) === "/") {
