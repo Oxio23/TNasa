@@ -1,0 +1,353 @@
+<!-- Restyling Phone Mod V1.8 03072026-->
+ 
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Termalis Config</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="favicons/favicon.ico">
+    <script src="utils.js" defer></script>
+    <script src="config.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* --- Estilos Generales con Ancho al 80% --- */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f5f5f5 !important;
+        margin: 0 !important;
+        padding: 20px 10px !important;
+        color: #333 !important;
+        box-sizing: border-box;
+        display: flex !important;
+        justify-content: center !important;
+      }
+
+      .grid {
+        width: 80% !important;
+        max-width: 500px !important;
+        margin: 0 auto !important;
+        display: block !important;
+      }
+      
+      .container {
+        width: 100% !important;
+        display: block !important;
+      }
+
+      /* --- Reloj Superior --- */
+      #clock {
+        background: #1a237e !important;
+        border-radius: 12px !important;
+        padding: 16px 10px !important;
+        text-align: center !important;
+        margin: 0 0 20px 0 !important;
+        box-shadow: 0 4px 12px rgba(26,35,126,0.15) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      #clock div:first-child {
+        color: rgba(255, 255, 255, 0.75) !important;
+        font-size: 0.85em !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1.5px !important;
+        margin-bottom: 4px !important;
+        font-weight: 600 !important;
+        background: none !important;
+      }
+      
+      #displayBackendTime {
+        color: #ffffff !important;
+        font-size: 2.6em !important;
+        font-weight: bold !important;
+        font-variant-numeric: tabular-nums !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: none !important;
+        letter-spacing: 2px !important;
+        display: inline-block !important;
+      }
+
+      .timeSpan.title {
+        display: none !important;
+      }
+
+      #timespans {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        width: 100% !important;
+      }
+
+      /* --- LAYOUT COMPACTO --- */
+      .timeSpan {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 14px !important;
+        padding: 16px !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.03) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        
+        display: grid !important;
+        grid-template-columns: auto 1fr !important; 
+        align-items: center !important;
+        column-gap: 12px !important;
+        row-gap: 8px !important;
+      }
+
+      /* Celda 1: ID de prioridad */
+      .timeSpan > div:first-child {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        background: #e2e8f0 !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
+        border-radius: 6px !important;
+        padding: 4px 8px !important;
+        font-size: 0.8em !important;
+        margin: 0 !important;
+        display: inline-block !important;
+        justify-self: start !important;
+      }
+
+      /* Celda 2: Nombre del modo */
+      .timeSpan .name {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        font-weight: bold !important;
+        font-size: 1.25em !important;
+        color: #1e293b !important;
+        margin: 0 !important;
+        text-align: left !important;
+      }
+
+      /* Alineación fluida horizontal para las horas */
+      .timeSpan .starttime {
+        grid-column: 1 / span 2 !important;
+        grid-row: 2 !important;
+        font-size: 0.95em !important;
+        color: #64748b !important;
+        margin: 2px 0 0 0 !important;
+        padding: 0 !important;
+        background: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        float: left !important;
+        width: auto !important;
+      }
+      .timeSpan .starttime::before {
+        content: "🕒 Horario: ";
+        font-weight: 500;
+        margin-right: 4px;
+      }
+
+      .timeSpan .endtime {
+        grid-column: 1 / span 2 !important;
+        grid-row: 2 !important;
+        font-size: 0.95em !important;
+        color: #64748b !important;
+        margin: 2px 0 0 0 !important; 
+        padding: 0 !important;
+        background: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        position: static !important; 
+        width: auto !important;
+      }
+      /* Espaciado de la "a" arreglado y compacto */
+      .timeSpan .endtime::before {
+        content: "a";
+        margin-left: 6px !important;
+        margin-right: 6px !important;
+        color: #64748b;
+      }
+
+      /* Celda 5: Estado activo */
+      .timeSpan .enabled {
+        grid-column: 1 / span 2 !important;
+        grid-row: 3 !important;
+        font-weight: 600 !important;
+        color: #10b981 !important;
+        background: #ecfdf5 !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        font-size: 0.85em !important;
+        margin: 2px 0 0 0 !important;
+        justify-self: start !important;
+        display: inline-block !important;
+      }
+
+      /* Celda 6: Rango de temperaturas */
+      .timeSpan .force {
+        grid-column: 1 / span 2 !important;
+        grid-row: 4 !important;
+        background: #f1f8e9 !important;
+        border: 1px solid #c5e1a5 !important;
+        color: #33691e !important;
+        font-weight: bold !important;
+        padding: 6px 14px !important;
+        border-radius: 8px !important;
+        font-size: 1em !important;
+        margin: 4px 0 0 0 !important;
+        justify-self: start !important;
+        display: inline-block !important;
+      }
+
+      .timeSpan .tempmin, 
+      .timeSpan .tempmax {
+        display: none !important;
+      }
+
+      /* --- ESTADOS EN EJECUCIÓN --- */
+      .timeSpan.tsSelected {
+        border-color: #10b981 !important;
+        background-color: #f6fdfa !important;
+      }
+      .timeSpan.tsSelected > div:first-child {
+        background: #10b981 !important;
+        color: white !important;
+      }
+      .timeSpan.tsSelected::after {
+        content: "ACTIVA";
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #10b981;
+        color: white;
+        font-size: 0.65em;
+        font-weight: bold;
+        padding: 4px 12px;
+        border-bottom-left-radius: 10px;
+      }
+
+      .timeSpan.tsForced {
+        border-color: #ef4444 !important;
+        background-color: #fef2f2 !important;
+      }
+      .timeSpan.tsForced > div:first-child {
+        background: #ef4444 !important;
+        color: white !important;
+      }
+      .timeSpan.tsForced .force {
+        background: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: white !important;
+      }
+      .timeSpan.tsForced::after {
+        content: "FORZADA";
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #ef4444;
+        color: white;
+        font-size: 0.65em;
+        font-weight: bold;
+        padding: 4px 12px;
+        border-bottom-left-radius: 10px;
+      }
+
+      /* Botón Volver */
+      .btn-back {
+        display: block !important;
+        text-align: center !important;
+        background: #e2e8f0 !important;
+        color: #334155 !important;
+        text-decoration: none !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
+        font-weight: bold !important;
+        margin: 25px 0 10px 0 !important;
+        font-size: 0.95em !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <div class="container">
+        
+        <!-- Reloj -->
+        <div id="clock">
+          <div>Hora del Servidor</div>
+          <div id="displayBackendTime">0000</div>
+        </div>
+
+        <div class="timeSpan title">
+          <div>Prioridad</div>
+          <div>Nombre</div>
+          <div>Hora Inicio</div>
+          <div>Hora Fin</div>
+          <div>Temp Mínima</div>
+          <div>Temp Máxima</div>
+          <div>Activo</div>
+          <div>Forzar</div>
+        </div>
+
+        <!-- Render de tarjetas -->
+        <div id="timespans"></div>
+
+        <!-- Botón Volver -->
+        <a href="index.html" class="btn-back">⬅ Volver al Panel</a>
+
+      </div>
+    </div>
+
+    <!-- Script Anticolgaduras con pausa de Observer -->
+    <script>
+      const formatearTextoConDosPuntos = (texto) => {
+        if (texto && texto.length === 4 && !texto.includes(":")) {
+          return texto.substring(0, 2) + ":" + texto.substring(2);
+        }
+        return texto;
+      };
+
+      const aplicarFormato = () => {
+        const reloj = document.getElementById("displayBackendTime");
+        if (reloj) reloj.innerText = formatearTextoConDosPuntos(reloj.innerText);
+
+        document.querySelectorAll(".timeSpan").forEach(card => {
+          const start = card.querySelector(".starttime");
+          const end = card.querySelector(".endtime");
+          if (start) start.innerText = formatearTextoConDosPuntos(start.innerText);
+          if (end) end.innerText = formatearTextoConDosPuntos(end.innerText);
+        });
+      };
+
+      // Función para arrancar la escucha de cambios
+      const iniciarObservador = () => {
+        const targetTarget = document.getElementById("timespans");
+        if (targetTarget) {
+          observer.observe(targetTarget, { childList: true, subtree: true, characterData: true });
+        }
+        const clockTarget = document.getElementById("clock");
+        if (clockTarget) {
+          observer.observe(clockTarget, { childList: true, subtree: true, characterData: true });
+        }
+      };
+
+      // El observador ahora se apaga antes de cambiar texto para evitar bucles infinitos
+      const observer = new MutationObserver(() => {
+        observer.disconnect(); // <-- Pausa el detector
+        aplicarFormato();      // <-- Aplica los : sin peligro
+        iniciarObservador();   // <-- Lo vuelve a prender
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        aplicarFormato();
+        iniciarObservador();
+      });
+    </script>
+  </body>
+</html>
