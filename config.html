@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V1.7 03072026-->
+<!-- Restyling Phone Mod V1.8 03072026-->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -41,7 +41,7 @@
         display: block !important;
       }
 
-      /* --- Reloj Superior con Separador por CSS --- */
+      /* --- Reloj Superior --- */
       #clock {
         background: #1a237e !important;
         border-radius: 12px !important;
@@ -62,7 +62,6 @@
         background: none !important;
       }
       
-      /* Simulamos los dos puntos agregando un espacio intermedio en el texto de 4 dígitos */
       #displayBackendTime {
         color: #ffffff !important;
         font-size: 2.6em !important;
@@ -86,7 +85,7 @@
         width: 100% !important;
       }
 
-      /* --- NUEVO LAYOUT COMPACTO --- */
+      /* --- LAYOUT COMPACTO --- */
       .timeSpan {
         background: white !important;
         border: 1px solid #e2e8f0 !important;
@@ -131,7 +130,7 @@
         text-align: left !important;
       }
 
-      /* SOLUCIÓN ALINEACIÓN: Forzamos a que las horas se comporten de forma fluida una al lado de la otra */
+      /* Alineación fluida horizontal para las horas */
       .timeSpan .starttime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -140,9 +139,7 @@
         margin: 2px 0 0 0 !important;
         padding: 0 !important;
         background: none !important;
-        
-        /* Convertimos en flex horizontal dinámico */
-        display: flex !important;
+        display: inline-flex !important;
         align-items: center !important;
         white-space: nowrap !important;
         float: left !important;
@@ -154,7 +151,6 @@
         margin-right: 4px;
       }
 
-      /* Celda 4: El horario de fin se pega de forma natural gracias a float e inline-flex */
       .timeSpan .endtime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -166,12 +162,10 @@
         display: inline-flex !important;
         align-items: center !important;
         white-space: nowrap !important;
-        
-        /* Eliminamos el 'left' fijo que causaba la separación enorme */
         position: static !important; 
         width: auto !important;
       }
-      /* Espaciado perfecto y controlado para la "a" */
+      /* Espaciado de la "a" arreglado y compacto */
       .timeSpan .endtime::before {
         content: "a";
         margin-left: 6px !important;
@@ -179,7 +173,7 @@
         color: #64748b;
       }
 
-      /* Celda 5: Estado activo (true / false) */
+      /* Celda 5: Estado activo */
       .timeSpan .enabled {
         grid-column: 1 / span 2 !important;
         grid-row: 3 !important;
@@ -194,7 +188,7 @@
         display: inline-block !important;
       }
 
-      /* Celda 6: Rango de temperaturas (Min ~ Max) */
+      /* Celda 6: Rango de temperaturas */
       .timeSpan .force {
         grid-column: 1 / span 2 !important;
         grid-row: 4 !important;
@@ -290,7 +284,6 @@
           <div id="displayBackendTime">0000</div>
         </div>
 
-        <!-- Soporte para config.js -->
         <div class="timeSpan title">
           <div>Prioridad</div>
           <div>Nombre</div>
@@ -311,7 +304,7 @@
       </div>
     </div>
 
-    <!-- Script Robusto: Detecta cambios en el HTML inyectado por el script del backend y clava los dos puntos -->
+    <!-- Script Anticolgaduras con pausa de Observer -->
     <script>
       const formatearTextoConDosPuntos = (texto) => {
         if (texto && texto.length === 4 && !texto.includes(":")) {
@@ -332,15 +325,8 @@
         });
       };
 
-      // MutationObserver: Vigila el contenedor y clava los dos puntos cada vez que config.js pisa el HTML
-      const observer = new MutationObserver(() => {
-        aplicarFormato();
-      });
-
-      document.addEventListener("DOMContentLoaded", () => {
-        aplicarFormato();
-        
-        // Empezamos a escuchar cambios en todo el contenedor de horarios y el reloj
+      // Función para arrancar la escucha de cambios
+      const iniciarObservador = () => {
         const targetTarget = document.getElementById("timespans");
         if (targetTarget) {
           observer.observe(targetTarget, { childList: true, subtree: true, characterData: true });
@@ -349,6 +335,18 @@
         if (clockTarget) {
           observer.observe(clockTarget, { childList: true, subtree: true, characterData: true });
         }
+      };
+
+      // El observador ahora se apaga antes de cambiar texto para evitar bucles infinitos
+      const observer = new MutationObserver(() => {
+        observer.disconnect(); // <-- Pausa el detector
+        aplicarFormato();      // <-- Aplica los : sin peligro
+        iniciarObservador();   // <-- Lo vuelve a prender
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        aplicarFormato();
+        iniciarObservador();
       });
     </script>
   </body>
