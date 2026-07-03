@@ -1,11 +1,11 @@
-<!-- Restyling Phone Mod V1.1 03072026-->
+<!-- Restyling Phone Mod V1.2 03072026-->
 
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Termalis Config</title>
     <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
@@ -16,164 +16,163 @@
     <script src="utils.js" defer></script>
     <script src="config.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
-   <style>
+    <style>
+      /* --- Estilos Generales para Celular (Ancho Completo) --- */
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background-color: #f5f5f5;
         margin: 0;
-        padding: 10px;
+        padding: 12px;
         color: #333;
+        box-sizing: border-box;
       }
-      .mobile-card {
-        background: white;
-        border-radius: 15px;
-        padding: 20px 15px;
-        max-width: 450px;
-        margin: 15px auto;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+
+      .grid, .container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
       }
-      
-      /* Reloj Superior con Contraste Asegurado */
+
+      /* --- Reloj Superior Estilizado y con Contraste --- */
       #clock {
         background: #1a237e;
         border-radius: 12px;
-        padding: 15px;
+        padding: 18px 10px;
         text-align: center;
         margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(26,35,126,0.2);
+        box-shadow: 0 4px 12px rgba(26,35,126,0.15);
+        width: 100%;
+        box-sizing: border-box;
       }
       #clock div:first-child {
-        color: rgba(255, 255, 255, 0.8) !important;
+        color: rgba(255, 255, 255, 0.75) !important;
         font-size: 0.85em;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
         margin-bottom: 4px;
+        font-weight: 600;
       }
-      /* Forzamos el color blanco con !important para que el JS no lo pise a negro */
+      /* Fuerza el color blanco e impide que el script de la PC lo cambie */
       #displayBackendTime {
         color: #ffffff !important;
-        font-size: 2.2em;
+        font-size: 2.6em;
         font-weight: bold;
         font-variant-numeric: tabular-nums;
+        letter-spacing: 1px;
       }
 
-      /* Ocultamos la fila de títulos original */
+      /* Ocultamos la cabecera vieja de la PC */
       .timeSpan.title {
         display: none !important;
       }
 
-      /* Contenedor de franjas */
+      /* --- Contenedor de Tarjetas al 100% del Ancho --- */
       #timespans {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 14px;
+        width: 100%;
       }
 
-      /* Rediseño de Tarjetas Flexibles */
+      /* --- Estilo de cada Tarjeta Horaria --- */
       .timeSpan {
-        background: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
-        padding: 15px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        width: 100%;
+        
+        /* Flexbox vertical para ordenar los elementos que inyecta el JS */
         display: flex;
         flex-direction: column;
         gap: 12px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        position: relative;
-        overflow: hidden;
+        text-align: left;
       }
 
-      /* Fila Superior de la tarjeta: ID, Nombre y Rango */
-      .timeSpan > div:nth-child(1), /* ID */
-      .timeSpan .name, 
-      .timeSpan .force {
-        margin: 0;
-      }
-
-      /* Contenedor interno para organizar la parte de arriba */
-      .timeSpan {
-        padding-top: 20px;
-      }
-      
-      /* Alineamos los elementos de arriba en una sola línea fluida */
-      .timeSpan div:nth-child(2) { /* Este suele ser el contenedor o el name */
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      /* Estilo del ID */
+      /* Fila Superior de la tarjeta (Identificador + Nombre) */
       .timeSpan > div:first-child {
-        background: #eee;
-        color: #666;
-        font-weight: bold;
+        background: #e2e8f0;
+        color: #475569;
+        font-weight: 700;
         border-radius: 6px;
-        padding: 4px 8px;
+        padding: 4px 10px;
         font-size: 0.85em;
         display: inline-block;
         align-self: flex-start;
+        margin: 0;
       }
 
       .timeSpan .name {
         font-weight: bold;
-        font-size: 1.2em;
-        color: #222;
-        flex-grow: 1;
-        text-align: left;
+        font-size: 1.3em;
+        color: #1e293b;
+        margin: 0;
+        line-height: 1.2;
       }
 
-      /* Rango de temperaturas (Min ~ Max) */
+      /* Bloque del medio: Rango de Temperaturas Destacado */
       .timeSpan .force {
         background: #f1f8e9;
         border: 1px solid #c5e1a5;
         color: #33691e;
         font-weight: bold;
-        padding: 6px 12px;
+        padding: 8px 14px;
         border-radius: 8px;
-        font-size: 0.95em;
-        margin-left: auto; /* Lo empuja a la derecha */
+        font-size: 1.05em;
+        align-self: flex-start;
+        margin: 4px 0;
       }
 
-      /* Fila Inferior: Horas y Estado Activo alineados perfectamente */
-      /* Ocultamos los textos sueltos originales redundantes */
-      .timeSpan .tempmin, .timeSpan .tempmax {
-        display: none !important;
-      }
-
-      /* Forzamos a que las horas y el 'true/false' se alineen en un renglón limpio en la base */
+      /* Fila Inferior: Horas de inicio, fin y estado activo */
       .timeSpan .starttime, 
       .timeSpan .endtime, 
       .timeSpan .enabled {
+        font-size: 1em;
+        color: #64748b;
         display: inline-block;
-        font-size: 0.95em;
-        color: #555;
+        margin: 0;
       }
 
-      /* Formateo de tiempos para que no se amontonen */
+      /* Estilizado para agrupar las horas en un renglón legible */
       .timeSpan .starttime::before {
-        content: "Horario: ";
-        color: #999;
-        font-size: 0.9em;
+        content: "🕒 Horario: ";
+        font-weight: 500;
       }
       .timeSpan .endtime::before {
         content: " a ";
-        color: #666;
-      }
-      
-      /* El estado activo (true/false) lo mandamos al fondo a la derecha */
-      .timeSpan .enabled {
-        margin-left: auto;
-        font-weight: bold;
-        color: #4caf50;
       }
 
-      /* --- ESTADOS DESTACADOS --- */
+      /* Estado habilitado (true / false) al final de la tarjeta */
+      .timeSpan .enabled {
+        font-weight: 600;
+        color: #10b981;
+        background: #ecfdf5;
+        padding: 3px 8px;
+        border-radius: 6px;
+        align-self: flex-start;
+        font-size: 0.85em;
+      }
+
+      /* Ocultamos los datos sueltos que rompen el diseño */
+      .timeSpan .tempmin, 
+      .timeSpan .tempmax {
+        display: none !important;
+      }
+
+      /* --- CONFIGURACIONES CUANDO LA FRANJA ESTÁ ACTIVA --- */
+      
+      /* Modo Seleccionado automáticamente por el Servidor */
       .timeSpan.tsSelected {
-        border-color: #4caf50;
-        background-color: #f1f8e9;
+        border-color: #10b981;
+        background-color: #f6fdfa;
+        box-shadow: 0 4px 12px rgba(16,185,129,0.08);
       }
       .timeSpan.tsSelected > div:first-child {
-        background: #4caf50;
+        background: #10b981;
         color: white;
       }
       .timeSpan.tsSelected::after {
@@ -181,25 +180,28 @@
         position: absolute;
         top: 0;
         right: 0;
-        background: #4caf50;
+        background: #10b981;
         color: white;
-        font-size: 0.65em;
+        font-size: 0.7em;
         font-weight: bold;
-        padding: 2px 8px;
-        border-bottom-left-radius: 8px;
+        padding: 4px 12px;
+        border-bottom-left-radius: 10px;
+        letter-spacing: 0.5px;
       }
 
+      /* Modo Forzado manualmente por el usuario (RUSH) */
       .timeSpan.tsForced {
-        border-color: #f44336;
-        background-color: #ffebee;
+        border-color: #ef4444;
+        background-color: #fef2f2;
+        box-shadow: 0 4px 12px rgba(239,68,68,0.08);
       }
       .timeSpan.tsForced > div:first-child {
-        background: #f44336;
+        background: #ef4444;
         color: white;
       }
       .timeSpan.tsForced .force {
-        background: #f44336;
-        border-color: #f44336;
+        background: #ef4444;
+        border-color: #ef4444;
         color: white;
       }
       .timeSpan.tsForced::after {
@@ -207,39 +209,44 @@
         position: absolute;
         top: 0;
         right: 0;
-        background: #f44336;
+        background: #ef4444;
         color: white;
-        font-size: 0.65em;
+        font-size: 0.7em;
         font-weight: bold;
-        padding: 2px 8px;
-        border-bottom-left-radius: 8px;
+        padding: 4px 12px;
+        border-bottom-left-radius: 10px;
+        letter-spacing: 0.5px;
       }
 
+      /* Botón Volver inferior ancho completo */
       .btn-back {
         display: block;
         text-align: center;
-        background: #e0e0e0;
-        color: #333;
+        background: #e2e8f0;
+        color: #334155;
         text-decoration: none;
-        padding: 12px;
-        border-radius: 10px;
+        padding: 14px;
+        border-radius: 12px;
         font-weight: bold;
         margin-top: 25px;
-        font-size: 0.95em;
+        font-size: 1em;
+        width: 100%;
+        box-sizing: border-box;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       }
     </style>
   </head>
   <body>
     <div class="grid">
-      <div class="container mobile-card">
+      <div class="container">
         
-        <!-- Reloj Centralizado -->
+        <!-- Reloj Con Contraste Asegurado -->
         <div id="clock">
           <div>Hora del Servidor</div>
           <div id="displayBackendTime">0000</div>
         </div>
 
-        <!-- Fila de títulos requerida por herencia pero oculta visualmente -->
+        <!-- Estructura base oculta pero requerida por config.js -->
         <div class="timeSpan title">
           <div>Prioridad</div>
           <div>Nombre</div>
@@ -251,10 +258,10 @@
           <div>Forzar</div>
         </div>
 
-        <!-- El contenedor donde config.js creará las tarjetas -->
+        <!-- Inyección limpia de tarjetas -->
         <div id="timespans"></div>
 
-        <!-- Enlace para regresar de forma amena al panel principal -->
+        <!-- Botón de retorno cómodo -->
         <a href="index.html" class="btn-back">⬅ Volver al Panel</a>
 
       </div>
