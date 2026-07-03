@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V1.6 03072026-->
+<!-- Restyling Phone Mod V1.7 03072026-->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -41,7 +41,7 @@
         display: block !important;
       }
 
-      /* --- Reloj Superior con Separador --- */
+      /* --- Reloj Superior con Separador por CSS --- */
       #clock {
         background: #1a237e !important;
         border-radius: 12px !important;
@@ -61,15 +61,18 @@
         font-weight: 600 !important;
         background: none !important;
       }
+      
+      /* Simulamos los dos puntos agregando un espacio intermedio en el texto de 4 dígitos */
       #displayBackendTime {
         color: #ffffff !important;
-        font-size: 2.4em !important;
+        font-size: 2.6em !important;
         font-weight: bold !important;
         font-variant-numeric: tabular-nums !important;
         margin: 0 !important;
         padding: 0 !important;
         background: none !important;
         letter-spacing: 2px !important;
+        display: inline-block !important;
       }
 
       .timeSpan.title {
@@ -128,8 +131,7 @@
         text-align: left !important;
       }
 
-      /* SOLUCIÓN: Usamos posicionamientos inline relativos sin empujes fijos */
-      /* Celda 3: Horario de inicio */
+      /* SOLUCIÓN ALINEACIÓN: Forzamos a que las horas se comporten de forma fluida una al lado de la otra */
       .timeSpan .starttime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -138,10 +140,13 @@
         margin: 2px 0 0 0 !important;
         padding: 0 !important;
         background: none !important;
-        display: inline-flex !important;
+        
+        /* Convertimos en flex horizontal dinámico */
+        display: flex !important;
         align-items: center !important;
         white-space: nowrap !important;
         float: left !important;
+        width: auto !important;
       }
       .timeSpan .starttime::before {
         content: "🕒 Horario: ";
@@ -149,7 +154,7 @@
         margin-right: 4px;
       }
 
-      /* Celda 4: Horario de fin con espaciado real */
+      /* Celda 4: El horario de fin se pega de forma natural gracias a float e inline-flex */
       .timeSpan .endtime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -162,15 +167,15 @@
         align-items: center !important;
         white-space: nowrap !important;
         
-        /* Esto lo posiciona exactamente al lado del anterior de forma fluida */
-        position: relative !important;
-        left: 195px !important; 
+        /* Eliminamos el 'left' fijo que causaba la separación enorme */
+        position: static !important; 
+        width: auto !important;
       }
-      /* Forzamos la separación de la letra "a" usando márgenes estrictos en CSS */
+      /* Espaciado perfecto y controlado para la "a" */
       .timeSpan .endtime::before {
         content: "a";
-        margin-left: 8px !important;
-        margin-right: 8px !important;
+        margin-left: 6px !important;
+        margin-right: 6px !important;
         color: #64748b;
       }
 
@@ -306,34 +311,44 @@
       </div>
     </div>
 
-    <!-- Script inyectado al final para meter los ":" de separación en los números planos -->
+    <!-- Script Robusto: Detecta cambios en el HTML inyectado por el script del backend y clava los dos puntos -->
     <script>
+      const formatearTextoConDosPuntos = (texto) => {
+        if (texto && texto.length === 4 && !texto.includes(":")) {
+          return texto.substring(0, 2) + ":" + texto.substring(2);
+        }
+        return texto;
+      };
+
+      const aplicarFormato = () => {
+        const reloj = document.getElementById("displayBackendTime");
+        if (reloj) reloj.innerText = formatearTextoConDosPuntos(reloj.innerText);
+
+        document.querySelectorAll(".timeSpan").forEach(card => {
+          const start = card.querySelector(".starttime");
+          const end = card.querySelector(".endtime");
+          if (start) start.innerText = formatearTextoConDosPuntos(start.innerText);
+          if (end) end.innerText = formatearTextoConDosPuntos(end.innerText);
+        });
+      };
+
+      // MutationObserver: Vigila el contenedor y clava los dos puntos cada vez que config.js pisa el HTML
+      const observer = new MutationObserver(() => {
+        aplicarFormato();
+      });
+
       document.addEventListener("DOMContentLoaded", () => {
-        const agregarDosPuntos = () => {
-          // Formatear reloj superior (ej: 1634 -> 16:34)
-          const reloj = document.getElementById("displayBackendTime");
-          if (reloj && reloj.innerText.length === 4 && !reloj.innerText.includes(":")) {
-            reloj.innerText = reloj.innerText.substring(0, 2) + ":" + reloj.innerText.substring(2);
-          }
-
-          // Formatear horas dentro de las tarjetas
-          document.querySelectorAll(".timeSpan").forEach(card => {
-            const start = card.querySelector(".starttime");
-            const end = card.querySelector(".endtime");
-            
-            if (start && start.innerText.length === 4 && !start.innerText.includes(":")) {
-              start.innerText = start.innerText.substring(0, 2) + ":" + start.innerText.substring(2);
-            }
-            if (end && end.innerText.length === 4 && !end.innerText.includes(":")) {
-              end.innerText = end.innerText.substring(0, 2) + ":" + end.innerText.substring(2);
-            }
-          });
-        };
-
-        // Lo ejecutamos con un leve delay para asegurar que config.js ya inyectó los datos del servidor
-        setTimeout(agregarDosPuntos, 300);
-        // Por si la conexión tarda un poco más, tiramos un segundo chequeo
-        setTimeout(agregarDosPuntos, 800);
+        aplicarFormato();
+        
+        // Empezamos a escuchar cambios en todo el contenedor de horarios y el reloj
+        const targetTarget = document.getElementById("timespans");
+        if (targetTarget) {
+          observer.observe(targetTarget, { childList: true, subtree: true, characterData: true });
+        }
+        const clockTarget = document.getElementById("clock");
+        if (clockTarget) {
+          observer.observe(clockTarget, { childList: true, subtree: true, characterData: true });
+        }
       });
     </script>
   </body>
