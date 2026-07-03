@@ -1,6 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
   <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termalis</title>
     <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
@@ -11,49 +13,131 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="utils.js" defer></script>
     <script src="index.js" defer></script>
+    <style>
+      /* Estilos rápidos para la botonera inferior y centrado móvil */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 10px;
+      }
+      .mobile-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px 15px;
+        max-width: 450px;
+        margin: 20px auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        text-align: center;
+      }
+      .version-box {
+        background: #f0f0f0;
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 0.85em;
+        color: #555;
+        margin: 15px 0;
+      }
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+        justify-content: space-between;
+      }
+      .btn-nav {
+        flex: 1;
+        padding: 12px 8px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9em;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      .btn-orange { background-color: #ff9800; }
+      .btn-green { background-color: #2ecc71; }
+      .btn-blue { background-color: #00a2ff; }
+      .hide { display: none; }
+    </style>
   </head>
   <body>
-    <div id="panel">
-      <div>Front: v2.2.2</div>
-      <div> | </div>
-      <div>Back: v<span id="dispBackendVersion">0</span></div>
-      <div> | </div>
-      <div id="configBackend"><a href="#">Cambiar dirección Arduino</a></div>
-      <div> | </div>
-      <div><a href="config.html" target="_blank">Configuración</a></div>
-    </div>
+
     <div class="grid">
-      <div class="container">
-        <h2 id="termoNasaLogo" style="font-style: italic">
+      <div class="container mobile-card">
+        
+        <!-- Logos de la App -->
+        <h2 id="termoNasaLogo" style="font-style: italic; font-size: 1.8em; margin: 10px 0;">
           <span style="color: red">Termo</span>NASA
         </h2>
-        <h2 id="helaNasaLogo" class="hide" style="font-style: italic">
+        <h2 id="helaNasaLogo" class="hide" style="font-style: italic; font-size: 1.8em; margin: 10px 0;">
           <span style="color: blue">Hela</span>NASA
         </h2>
-        <div class="big">
-          <span id="temperature">0.0</span
-          ><span style="font-size: 0.25em">º</span>
+
+        <!-- Temperatura Gigante -->
+        <div class="big" style="font-size: 5.5em; font-weight: bold; margin: 20px 0; letter-spacing: -2px;">
+          <span id="temperature">0.0</span><span style="font-size: 0.35em; vertical-align: super;">º</span>
         </div>
-        <div id="engine">
+
+        <!-- Estado del Calefactor / Engine -->
+        <div id="engine" style="margin: 20px 0;">
           <div>
-            <div>
-              <img src="engineOn.png" id="engineOn" class="hide pulse" />
-            </div>
-            <div><img src="engineOff.png" id="engineOff" class="" /></div>
+            <div><img src="engineOn.png" id="engineOn" class="hide pulse" style="max-height: 70px;" /></div>
+            <div><img src="engineOff.png" id="engineOff" class="" style="max-height: 70px;" /></div>
           </div>
-          <div id="dispEngineMessage"></div>
+          <div id="dispEngineMessage" style="font-weight: bold; margin-top: 5px;"></div>
         </div>
-        <div class="progress-bar">
+
+        <!-- Barra de progreso / Rangos -->
+        <div class="progress-bar" style="margin: 20px 0;">
           <div><span id="dispTempMin" class="pointer">0</span>º &lt;</div>
           <div class="envelope">
             <div id="box" class="box"></div>
           </div>
           <div>&gt; <span id="dispTempMax" class="pointer">0</span>º</div>
         </div>
-        <div>
-          <span id="dispActiveTimeSpan">Default</span><span id="dispActiveTimeForced" class="red"></span>
+
+        <!-- Info de Franja Activa y Versiones en un solo bloque integrado -->
+        <div class="version-box">
+          <div>Franja activa: <span id="dispActiveTimeSpan">Default</span><span id="dispActiveTimeForced" class="red"></span></div>
+          <div style="font-size: 0.85em; margin-top: 4px; color: #888;">
+            Front: v2.2.2 | Back: v<span id="dispBackendVersion">0</span>
+          </div>
         </div>
+
+        <!-- Botonera Inferior Estilo App móvil -->
+        <div class="button-group">
+          <!-- Botón Naranja: Configuración -->
+          <a href="config.html" class="btn-nav btn-orange">⚙️ Config</a>
+          
+          <!-- Botón Verde: Forzar RUSH (Interactúa con la lógica de encendido/apagado) -->
+          <button id="btnForzarRush" class="btn-nav btn-green" onclick="toggleEngine()">🚀 Forzar RUSH</button>
+          
+          <!-- Botón Azul: Automático / Cambiar IP -->
+          <div id="configBackend" style="flex: 1; display: block;">
+            <a href="#" class="btn-nav btn-blue" style="width: 100%; box-sizing: border-box;">🤖 Automático</a>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <script>
+      // Esta pequeña función simula la interacción con la botonera de encendido/apagado si tu index.js requiere un trigger directo.
+      function toggleEngine() {
+        const engineOn = document.getElementById('engineOn');
+        const engineOff = document.getElementById('engineOff');
+        if(engineOn && engineOff) {
+          // Si el script original no maneja el click del botón directamente, este click simula tocar la imagen del motor para alternarlo
+          if(engineOn.classList.contains('hide')) {
+            engineOff.click();
+          } else {
+            engineOn.click();
+          }
+        }
+      }
+    </script>
   </body>
-</html>   
+</html>
