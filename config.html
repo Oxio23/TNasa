@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V1.0 03072026-->
+<!-- Restyling Phone Mod V1.1 03072026-->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -16,7 +16,7 @@
     <script src="utils.js" defer></script>
     <script src="config.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
-    <style>
+   <style>
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background-color: #f5f5f5;
@@ -33,10 +33,9 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
       }
       
-      /* Reloj Superior Estilizado */
+      /* Reloj Superior con Contraste Asegurado */
       #clock {
         background: #1a237e;
-        color: white;
         border-radius: 12px;
         padding: 15px;
         text-align: center;
@@ -44,48 +43,66 @@
         box-shadow: 0 2px 8px rgba(26,35,126,0.2);
       }
       #clock div:first-child {
+        color: rgba(255, 255, 255, 0.8) !important;
         font-size: 0.85em;
         text-transform: uppercase;
         letter-spacing: 1px;
-        opacity: 0.8;
         margin-bottom: 4px;
       }
+      /* Forzamos el color blanco con !important para que el JS no lo pise a negro */
       #displayBackendTime {
-        font-size: 2em;
+        color: #ffffff !important;
+        font-size: 2.2em;
         font-weight: bold;
         font-variant-numeric: tabular-nums;
       }
 
-      /* Ocultamos la fila de títulos original en móviles porque ya no es una tabla */
+      /* Ocultamos la fila de títulos original */
       .timeSpan.title {
         display: none !important;
       }
 
-      /* Contenedor dinámico de franjas */
+      /* Contenedor de franjas */
       #timespans {
         display: flex;
         flex-direction: column;
         gap: 15px;
       }
 
-      /* Re-estilización COMPLETA de las tarjetas que genera config.js */
-      /* El JS inyecta un div con clases .timeSpan y opcionalmente .tsSelected o .tsForced */
+      /* Rediseño de Tarjetas Flexibles */
       .timeSpan {
         background: #ffffff;
         border: 1px solid #e0e0e0;
         border-radius: 12px;
         padding: 15px;
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        grid-template-rows: auto auto;
-        gap: 8px 12px;
-        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         position: relative;
         overflow: hidden;
       }
 
-      /* Prioridad (ID numérico) */
+      /* Fila Superior de la tarjeta: ID, Nombre y Rango */
+      .timeSpan > div:nth-child(1), /* ID */
+      .timeSpan .name, 
+      .timeSpan .force {
+        margin: 0;
+      }
+
+      /* Contenedor interno para organizar la parte de arriba */
+      .timeSpan {
+        padding-top: 20px;
+      }
+      
+      /* Alineamos los elementos de arriba en una sola línea fluida */
+      .timeSpan div:nth-child(2) { /* Este suele ser el contenedor o el name */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Estilo del ID */
       .timeSpan > div:first-child {
         background: #eee;
         color: #666;
@@ -93,65 +110,64 @@
         border-radius: 6px;
         padding: 4px 8px;
         font-size: 0.85em;
-        grid-column: 1;
-        grid-row: 1;
-        text-align: center;
-        min-width: 20px;
+        display: inline-block;
+        align-self: flex-start;
       }
 
-      /* Nombre de la franja */
       .timeSpan .name {
         font-weight: bold;
-        font-size: 1.1em;
-        grid-column: 2;
-        grid-row: 1;
-        text-align: left;
+        font-size: 1.2em;
         color: #222;
+        flex-grow: 1;
+        text-align: left;
       }
 
-      /* Horarios (Inicio y Fin combinados visualmente) */
-      .timeSpan .starttime, .timeSpan .endtime {
-        grid-column: 2;
-        grid-row: 2;
-        font-size: 0.9em;
-        color: #666;
-      }
-      /* Truco CSS para espaciar las horas si se muestran juntas */
-      .timeSpan .starttime { text-align: left; }
-      .timeSpan .endtime::before { content: " a "; }
-      .timeSpan .endtime { margin-left: 45px; } /* Desplazamiento visual */
-
-      /* Temperaturas Mínima y Máxima unificadas en un bloque de control */
-      .timeSpan .tempmin, .timeSpan .tempmax {
-        display: none; /* Las ocultamos de su texto suelto original... */
-      }
-      /* ...Y usamos el contenedor .force que ya trae los rangos armados "Min ~ Max" */
+      /* Rango de temperaturas (Min ~ Max) */
       .timeSpan .force {
-        grid-column: 3;
-        grid-row: 1;
         background: #f1f8e9;
         border: 1px solid #c5e1a5;
         color: #33691e;
         font-weight: bold;
-        padding: 6px 10px;
+        padding: 6px 12px;
         border-radius: 8px;
         font-size: 0.95em;
-        text-align: center;
+        margin-left: auto; /* Lo empuja a la derecha */
       }
 
-      /* Switch de Activo / Estado */
+      /* Fila Inferior: Horas y Estado Activo alineados perfectamente */
+      /* Ocultamos los textos sueltos originales redundantes */
+      .timeSpan .tempmin, .timeSpan .tempmax {
+        display: none !important;
+      }
+
+      /* Forzamos a que las horas y el 'true/false' se alineen en un renglón limpio en la base */
+      .timeSpan .starttime, 
+      .timeSpan .endtime, 
       .timeSpan .enabled {
-        grid-column: 3;
-        grid-row: 2;
-        font-size: 0.85em;
-        font-weight: 600;
-        text-align: center;
-        color: #757575;
+        display: inline-block;
+        font-size: 0.95em;
+        color: #555;
       }
 
-      /* --- ESTADOS DESTACADOS (Cuando la franja está corriendo) --- */
+      /* Formateo de tiempos para que no se amontonen */
+      .timeSpan .starttime::before {
+        content: "Horario: ";
+        color: #999;
+        font-size: 0.9em;
+      }
+      .timeSpan .endtime::before {
+        content: " a ";
+        color: #666;
+      }
       
-      /* Franja seleccionada normalmente por el reloj */
+      /* El estado activo (true/false) lo mandamos al fondo a la derecha */
+      .timeSpan .enabled {
+        margin-left: auto;
+        font-weight: bold;
+        color: #4caf50;
+      }
+
+      /* --- ESTADOS DESTACADOS --- */
       .timeSpan.tsSelected {
         border-color: #4caf50;
         background-color: #f1f8e9;
@@ -173,7 +189,6 @@
         border-bottom-left-radius: 8px;
       }
 
-      /* Franja Forzada manualmente (RUSH / Prioridad máxima) */
       .timeSpan.tsForced {
         border-color: #f44336;
         background-color: #ffebee;
@@ -200,7 +215,6 @@
         border-bottom-left-radius: 8px;
       }
 
-      /* Botón Volver flotante o inferior para no quedar atrapado */
       .btn-back {
         display: block;
         text-align: center;
