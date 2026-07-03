@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V1.5 03072026-->
+<!-- Restyling Phone Mod V1.6 03072026-->
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -40,7 +40,7 @@
         display: block !important;
       }
 
-      /* --- Reloj Superior --- */
+      /* --- Reloj Superior con Separador --- */
       #clock {
         background: #1a237e !important;
         border-radius: 12px !important;
@@ -68,6 +68,7 @@
         margin: 0 !important;
         padding: 0 !important;
         background: none !important;
+        letter-spacing: 2px !important;
       }
 
       .timeSpan.title {
@@ -81,7 +82,7 @@
         width: 100% !important;
       }
 
-      /* --- NUEVO LAYOUT COMPACTO (Estilo Paint) --- */
+      /* --- NUEVO LAYOUT COMPACTO --- */
       .timeSpan {
         background: white !important;
         border: 1px solid #e2e8f0 !important;
@@ -93,15 +94,14 @@
         box-sizing: border-box !important;
         width: 100% !important;
         
-        /* Organizamos los elementos dinámicos mediante una grilla estricta */
         display: grid !important;
-        grid-template-columns: auto 1fr !important; /* Columna 1: ID, Columna 2: Nombre */
+        grid-template-columns: auto 1fr !important; 
         align-items: center !important;
         column-gap: 12px !important;
         row-gap: 8px !important;
       }
 
-      /* Celda 1: ID de prioridad (Fila 1, Columna 1) */
+      /* Celda 1: ID de prioridad */
       .timeSpan > div:first-child {
         grid-column: 1 !important;
         grid-row: 1 !important;
@@ -116,7 +116,7 @@
         justify-self: start !important;
       }
 
-      /* Celda 2: Nombre del modo al lado del ID (Fila 1, Columna 2) */
+      /* Celda 2: Nombre del modo */
       .timeSpan .name {
         grid-column: 2 !important;
         grid-row: 1 !important;
@@ -127,7 +127,8 @@
         text-align: left !important;
       }
 
-      /* Celda 3: Horario de inicio (Fila 2, abarca todo el ancho) */
+      /* SOLUCIÓN: Usamos posicionamientos inline relativos sin empujes fijos */
+      /* Celda 3: Horario de inicio */
       .timeSpan .starttime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -139,6 +140,7 @@
         display: inline-flex !important;
         align-items: center !important;
         white-space: nowrap !important;
+        float: left !important;
       }
       .timeSpan .starttime::before {
         content: "🕒 Horario: ";
@@ -146,26 +148,32 @@
         margin-right: 4px;
       }
 
-      /* Celda 4: Horario de fin pegado inmediatamente al de inicio */
+      /* Celda 4: Horario de fin con espaciado real */
       .timeSpan .endtime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
         font-size: 0.95em !important;
         color: #64748b !important;
-        margin: 2px 0 0 115px !important; /* Empuje preciso para quedar al lado de starttime */
+        margin: 2px 0 0 0 !important; 
         padding: 0 !important;
         background: none !important;
         display: inline-flex !important;
         align-items: center !important;
         white-space: nowrap !important;
+        
+        /* Esto lo posiciona exactamente al lado del anterior de forma fluida */
+        position: relative !important;
+        left: 195px !important; 
       }
+      /* Forzamos la separación de la letra "a" usando márgenes estrictos en CSS */
       .timeSpan .endtime::before {
-        content: "  a "; 
-        margin-right: 4px;
+        content: "a";
+        margin-left: 8px !important;
+        margin-right: 8px !important;
         color: #64748b;
       }
 
-      /* Celda 5: Estado activo (true / false) (Fila 3) */
+      /* Celda 5: Estado activo (true / false) */
       .timeSpan .enabled {
         grid-column: 1 / span 2 !important;
         grid-row: 3 !important;
@@ -180,7 +188,7 @@
         display: inline-block !important;
       }
 
-      /* Celda 6: Rango de temperaturas (Min ~ Max) (Fila 4) */
+      /* Celda 6: Rango de temperaturas (Min ~ Max) */
       .timeSpan .force {
         grid-column: 1 / span 2 !important;
         grid-row: 4 !important;
@@ -196,13 +204,12 @@
         display: inline-block !important;
       }
 
-      /* Escondemos los datos sueltos que rompen todo */
       .timeSpan .tempmin, 
       .timeSpan .tempmax {
         display: none !important;
       }
 
-      /* --- ESTADOS EN EJECUCIÓN (Bordes y Etiquetas de esquina) --- */
+      /* --- ESTADOS EN EJECUCIÓN --- */
       .timeSpan.tsSelected {
         border-color: #10b981 !important;
         background-color: #f6fdfa !important;
@@ -297,5 +304,36 @@
 
       </div>
     </div>
+
+    <!-- Script inyectado al final para meter los ":" de separación en los números planos -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const agregarDosPuntos = () => {
+          // Formatear reloj superior (ej: 1634 -> 16:34)
+          const reloj = document.getElementById("displayBackendTime");
+          if (reloj && reloj.innerText.length === 4 && !reloj.innerText.includes(":")) {
+            reloj.innerText = reloj.innerText.substring(0, 2) + ":" + reloj.innerText.substring(2);
+          }
+
+          // Formatear horas dentro de las tarjetas
+          document.querySelectorAll(".timeSpan").forEach(card => {
+            const start = card.querySelector(".starttime");
+            const end = card.querySelector(".endtime");
+            
+            if (start && start.innerText.length === 4 && !start.innerText.includes(":")) {
+              start.innerText = start.innerText.substring(0, 2) + ":" + start.innerText.substring(2);
+            }
+            if (end && end.innerText.length === 4 && !end.innerText.includes(":")) {
+              end.innerText = end.innerText.substring(0, 2) + ":" + end.innerText.substring(2);
+            }
+          });
+        };
+
+        // Lo ejecutamos con un leve delay para asegurar que config.js ya inyectó los datos del servidor
+        setTimeout(agregarDosPuntos, 300);
+        // Por si la conexión tarda un poco más, tiramos un segundo chequeo
+        setTimeout(agregarDosPuntos, 800);
+      });
+    </script>
   </body>
 </html>
