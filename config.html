@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V2.0 03072026 --> 
+<!-- Restyling Phone Mod V2.1 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -133,52 +133,49 @@
       /* Horas en línea */
      /* --- SOLUCIÓN AL AMONTONAMIENTO --- */
       
-      /* Forzamos que la hora de inicio se estire en todo el ancho de la fila 2 */
+     /* --- ALINEACIÓN DE HORARIOS POR COLUMNAS NATIVAS --- */
+      
+      /* Celda de Inicio: Se queda fija en la Columna 1 */
       .timeSpan .starttime {
-        grid-column: 1 / span 2 !important;
+        grid-column: 1 !important;
         grid-row: 2 !important;
         font-size: 0.95em !important;
         color: #64748b !important;
-        margin: 6px 0 0 0 !important;
+        margin: 8px 0 0 0 !important;
         padding: 0 !important;
         background: none !important;
-        
-        /* Se convierte en una fila flex horizontal continua */
         display: inline-flex !important;
         align-items: center !important;
-        flex-wrap: wrap !important; 
-        width: 100% !important;
+        white-space: nowrap !important;
+        width: auto !important;
       }
-      
-      /* Prefijo del relojito */
       .timeSpan .starttime::before {
         content: "🕒 Horario: ";
         font-weight: 500;
-        margin-right: 6px !important;
+        margin-right: 4px !important;
       }
 
-      /* La hora de fin se desacopla del grid y se posiciona de forma relativa al lado */
+      /* Celda de Fin: Se clava en la Columna 2 y se pega al borde izquierdo */
       .timeSpan .endtime {
-        display: inline-flex !important;
-        align-items: center !important;
-        font-size: 1em !important; /* Mismo tamaño que la hora de inicio */
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        font-size: 0.95em !important;
         color: #64748b !important;
-        margin: 0 !important;
+        margin: 8px 0 0 0 !important; 
         padding: 0 !important;
         background: none !important;
-        position: relative !important;
-        left: 0 !important;
-        top: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        justify-self: start !important; /* Fuerza a que se pegue a la hora de inicio */
+        position: static !important; 
         width: auto !important;
-        float: none !important;
       }
-      
-      /* Separador 'a' controlado y con espacios perfectos */
+      /* Espaciado perfecto para la "a" intermedia */
       .timeSpan .endtime::before {
         content: "a";
-        margin-left: 8px !important;
-        margin-right: 8px !important;
-        font-weight: normal !important;
+        margin-left: 6px !important;
+        margin-right: 6px !important;
         color: #64748b !important;
       }
 
