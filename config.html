@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V2.0 03072026--> 
+<!-- Restyling Phone Mod V1.8 03072026--> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -130,7 +130,7 @@
         text-align: left !important;
       }
 
-      /* Horas en línea */
+      /* Alineación fluida horizontal para las horas */
       .timeSpan .starttime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -165,6 +165,7 @@
         position: static !important; 
         width: auto !important;
       }
+      /* Espaciado de la "a" arreglado y compacto */
       .timeSpan .endtime::before {
         content: "a";
         margin-left: 6px !important;
@@ -303,47 +304,50 @@
       </div>
     </div>
 
-    <!-- Script Corregido sin doble declaración de constantes -->
+    <!-- Script Anticolgaduras con pausa de Observer -->
     <script>
-      (function() {
-        const formatearConDosPuntos = (texto) => {
-          if (texto && texto.length === 4 && !texto.includes(":")) {
-            return texto.substring(0, 2) + ":" + texto.substring(2);
-          }
-          return texto;
-        };
+      const formatearTextoConDosPuntos = (texto) => {
+        if (texto && texto.length === 4 && !texto.includes(":")) {
+          return texto.substring(0, 2) + ":" + texto.substring(2);
+        }
+        return texto;
+      };
 
-        const procesarElementos = () => {
-          const reloj = document.getElementById("displayBackendTime");
-          if (reloj) reloj.innerText = formatearConDosPuntos(reloj.innerText);
+      const aplicarFormato = () => {
+        const reloj = document.getElementById("displayBackendTime");
+        if (reloj) reloj.innerText = formatearTextoConDosPuntos(reloj.innerText);
 
-          document.querySelectorAll(".timeSpan").forEach(card => {
-            const start = card.querySelector(".starttime");
-            const end = card.querySelector(".endtime");
-            if (start) start.innerText = formatearConDosPuntos(start.innerText);
-            if (end) end.innerText = formatearConDosPuntos(end.innerText);
-          });
-        };
-
-        // Creamos un único observador encapsulado seguro
-        const miObservador = new MutationObserver(() => {
-          miObservador.disconnect(); 
-          procesarElementos();      
-          encenderObservador();   
+        document.querySelectorAll(".timeSpan").forEach(card => {
+          const start = card.querySelector(".starttime");
+          const end = card.querySelector(".endtime");
+          if (start) start.innerText = formatearTextoConDosPuntos(start.innerText);
+          if (end) end.innerText = formatearTextoConDosPuntos(end.innerText);
         });
+      };
 
-        const encenderObservador = () => {
-          const t1 = document.getElementById("timespans");
-          if (t1) miObservador.observe(t1, { childList: true, subtree: true, characterData: true });
-          const t2 = document.getElementById("clock");
-          if (t2) miObservador.observe(t2, { childList: true, subtree: true, characterData: true });
-        };
+      // Función para arrancar la escucha de cambios
+      const iniciarObservador = () => {
+        const targetTarget = document.getElementById("timespans");
+        if (targetTarget) {
+          observer.observe(targetTarget, { childList: true, subtree: true, characterData: true });
+        }
+        const clockTarget = document.getElementById("clock");
+        if (clockTarget) {
+          observer.observe(clockTarget, { childList: true, subtree: true, characterData: true });
+        }
+      };
 
-        document.addEventListener("DOMContentLoaded", () => {
-          procesarElementos();
-          encenderObservador();
-        });
-      })();
+      // El observador ahora se apaga antes de cambiar texto para evitar bucles infinitos
+      const observer = new MutationObserver(() => {
+        observer.disconnect(); // <-- Pausa el detector
+        aplicarFormato();      // <-- Aplica los : sin peligro
+        iniciarObservador();   // <-- Lo vuelve a prender
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        aplicarFormato();
+        iniciarObservador();
+      });
     </script>
   </body>
 </html>
