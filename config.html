@@ -1,4 +1,5 @@
 <!-- Restyling Phone Mod V2.2 03072026 --> 
+<!-- Restyling Phone Mod V2.1 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -208,6 +209,7 @@
         user-select: none !important;
         min-width: 60px !important;
         text-align: center !important;
+        pointer-events: auto !important; /* Asegurar que sea clickeable */
       }
       
       .timeSpan .force:hover {
@@ -229,6 +231,7 @@
         align-items: center !important;
         flex-wrap: wrap !important;
         justify-self: start !important;
+        pointer-events: auto !important;
       }
       
       .timeSpan .temp-edit-container.active {
@@ -264,6 +267,7 @@
         background: transparent !important;
         color: #1e293b !important;
         outline: none !important;
+        pointer-events: auto !important;
       }
       
       .timeSpan .temp-input-group input:focus {
@@ -291,6 +295,7 @@
         font-size: 0.85em !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
+        pointer-events: auto !important;
       }
       
       .timeSpan .temp-edit-buttons .btn-save {
@@ -415,17 +420,17 @@
       </div>
     </div>
 
-    <!-- Script con INTERVALO FIJO - Sin MutationObserver -->
+    <!-- Script definitivo - SOLO formatea una vez -->
     <script>
       (function() {
         let editando = false;
-        let intervaloActivo = null;
+        let configurado = false;
 
-        // Función mejorada para formatear hora con separador ":"
+        // Función para formatear hora con separador ":"
         const formatearConDosPuntos = (texto) => {
           if (!texto) return texto;
           
-          // Si ya tiene formato correcto, no hacer nada
+          // Si ya tiene formato correcto, devolverlo
           if (/^\d{1,2}:\d{2}$/.test(texto)) {
             return texto;
           }
@@ -443,11 +448,8 @@
           return texto;
         };
 
-        // Función para formatear SOLO las horas
-        const formatearHoras = () => {
-          // Si estamos editando, no hacer nada
-          if (editando) return;
-          
+        // Función para formatear horas (SOLO UNA VEZ)
+        const formatearHorasUnaVez = () => {
           // Formatear reloj
           const reloj = document.getElementById("displayBackendTime");
           if (reloj) {
@@ -481,8 +483,10 @@
           });
         };
 
-        // Función para configurar la edición de temperatura
+        // Función para configurar la edición de temperatura (SOLO UNA VEZ)
         const configurarEditablesTemperaturas = () => {
+          if (configurado) return;
+          
           document.querySelectorAll('.timeSpan:not(.title)').forEach(card => {
             // Verificar si ya tiene el contenedor de edición
             if (card.querySelector('.temp-edit-container')) {
@@ -546,6 +550,9 @@
               // Evento click en .force para activar edición
               force.addEventListener('click', function(e) {
                 e.stopPropagation();
+                e.preventDefault();
+                
+                console.log('Click en temperatura:', this.textContent);
                 
                 // Activar flag de edición
                 editando = true;
@@ -567,7 +574,7 @@
                 container.classList.add('active');
                 
                 // Enfocar el input mínimo
-                setTimeout(() => minInput.focus(), 50);
+                setTimeout(() => minInput.focus(), 100);
               });
               
               // Función para guardar cambios
@@ -603,7 +610,7 @@
                 // Desactivar flag de edición
                 editando = false;
                 
-                console.log(`Temperatura actualizada: ${min}~${max}`);
+                console.log(`✅ Temperatura actualizada: ${min}~${max}`);
               };
               
               // Función para cancelar cambios
@@ -611,11 +618,19 @@
                 container.classList.remove('active');
                 force.classList.remove('hidden');
                 editando = false;
+                console.log('❌ Edición cancelada');
               };
               
               // Eventos de los botones
-              btnSave.addEventListener('click', guardarCambios);
-              btnCancel.addEventListener('click', cancelarCambios);
+              btnSave.addEventListener('click', function(e) {
+                e.stopPropagation();
+                guardarCambios();
+              });
+              
+              btnCancel.addEventListener('click', function(e) {
+                e.stopPropagation();
+                cancelarCambios();
+              });
               
               // Enter en inputs para guardar
               minInput.addEventListener('keydown', (e) => {
@@ -639,61 +654,39 @@
               });
             }
           });
+          
+          configurado = true;
         };
 
-        // Función principal de procesamiento
-        const procesarElementos = () => {
-          formatearHoras();
+        // Función principal - SOLO se ejecuta UNA VEZ
+        const inicializar = () => {
+          console.log('🚀 Inicializando configuración...');
+          
+          // Formatear horas una sola vez
+          formatearHorasUnaVez();
+          
+          // Configurar editables una sola vez
           configurarEditablesTemperaturas();
+          
+          console.log('✅ Configuración completada');
         };
 
-        // Iniciar intervalo de 60 segundos para refrescar
-        const iniciarIntervalo = () => {
-          // Limpiar intervalo anterior si existe
-          if (intervaloActivo) {
-            clearInterval(intervaloActivo);
-          }
-          
-          // Ejecutar cada 60 segundos
-          intervaloActivo = setInterval(() => {
-            // Solo ejecutar si NO estamos editando
-            if (!editando) {
-              console.log('Refrescando formato de horas...');
-              formatearHoras();
-            }
-          }, 60000); // 60 segundos
-        };
-
-        // Inicialización
-        document.addEventListener("DOMContentLoaded", () => {
-          // Configurar todo
-          procesarElementos();
-          
-          // Iniciar el intervalo de 60 segundos
-          iniciarIntervalo();
-          
-          console.log('✅ Configuración iniciada - Refresco cada 60 segundos');
-        });
-
-        // Ejecutar después de que config.js cargue
+        // Inicialización - SOLO UNA VEZ
         if (document.readyState === 'complete') {
-          setTimeout(() => {
-            procesarElementos();
-          }, 100);
+          setTimeout(inicializar, 200);
         } else {
-          window.addEventListener('load', () => {
-            setTimeout(() => {
-              procesarElementos();
-            }, 100);
+          document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(inicializar, 200);
           });
         }
 
-        // Limpiar intervalo si la página se cierra
-        window.addEventListener('beforeunload', () => {
-          if (intervaloActivo) {
-            clearInterval(intervaloActivo);
-          }
+        // También ejecutar después de que config.js cargue
+        window.addEventListener('load', () => {
+          setTimeout(inicializar, 300);
         });
+
+        // NO hay intervalos, NO hay MutationObservers
+        console.log('📱 Modo de edición de temperatura activo');
 
       })();
     </script>
