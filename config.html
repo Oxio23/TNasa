@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V2.2 03072026 --> 
+<!-- Restyling Phone Mod V2.1 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -415,14 +415,20 @@
       </div>
     </div>
 
-    <!-- Script Corregido - NO REFRESCA DURANTE EDICIÓN -->
+    <!-- Script con INTERVALO FIJO - Sin MutationObserver -->
     <script>
       (function() {
-        let editando = false; // Flag para saber si estamos editando
+        let editando = false;
+        let intervaloActivo = null;
 
         // Función mejorada para formatear hora con separador ":"
         const formatearConDosPuntos = (texto) => {
           if (!texto) return texto;
+          
+          // Si ya tiene formato correcto, no hacer nada
+          if (/^\d{1,2}:\d{2}$/.test(texto)) {
+            return texto;
+          }
           
           let limpio = texto.replace(/[:,\s]/g, '');
           
@@ -434,15 +440,14 @@
             return limpio.substring(0, 1) + ":" + limpio.substring(1);
           }
           
-          if (texto.includes(':')) {
-            return texto;
-          }
-          
           return texto;
         };
 
-        // Función para formatear SOLO las horas sin tocar la edición
+        // Función para formatear SOLO las horas
         const formatearHoras = () => {
+          // Si estamos editando, no hacer nada
+          if (editando) return;
+          
           // Formatear reloj
           const reloj = document.getElementById("displayBackendTime");
           if (reloj) {
@@ -453,35 +458,35 @@
             }
           }
 
-          // Formatear horas en cada tarjeta (solo si NO estamos editando)
-          if (!editando) {
-            document.querySelectorAll(".timeSpan").forEach(card => {
-              const start = card.querySelector(".starttime");
-              const end = card.querySelector(".endtime");
-              if (start) {
-                const texto = start.innerText.trim();
-                const formateado = formatearConDosPuntos(texto);
-                if (start.innerText !== formateado) {
-                  start.innerText = formateado;
-                }
+          // Formatear horas en cada tarjeta
+          document.querySelectorAll(".timeSpan:not(.title)").forEach(card => {
+            const start = card.querySelector(".starttime");
+            const end = card.querySelector(".endtime");
+            
+            if (start) {
+              const texto = start.innerText.trim();
+              const formateado = formatearConDosPuntos(texto);
+              if (start.innerText !== formateado) {
+                start.innerText = formateado;
               }
-              if (end) {
-                const texto = end.innerText.trim();
-                const formateado = formatearConDosPuntos(texto);
-                if (end.innerText !== formateado) {
-                  end.innerText = formateado;
-                }
+            }
+            
+            if (end) {
+              const texto = end.innerText.trim();
+              const formateado = formatearConDosPuntos(texto);
+              if (end.innerText !== formateado) {
+                end.innerText = formateado;
               }
-            });
-          }
+            }
+          });
         };
 
-        // Función para configurar la edición de temperatura (solo una vez)
+        // Función para configurar la edición de temperatura
         const configurarEditablesTemperaturas = () => {
-          document.querySelectorAll('.timeSpan').forEach(card => {
+          document.querySelectorAll('.timeSpan:not(.title)').forEach(card => {
             // Verificar si ya tiene el contenedor de edición
             if (card.querySelector('.temp-edit-container')) {
-              return; // Ya está configurado
+              return;
             }
 
             const forceElement = card.querySelector('.force');
@@ -638,61 +643,57 @@
 
         // Función principal de procesamiento
         const procesarElementos = () => {
-          // Solo formatear horas (sin tocar la edición)
           formatearHoras();
-          
-          // Configurar editables (solo si no están configurados)
           configurarEditablesTemperaturas();
         };
 
-        // Observador más inteligente
-        let timeoutId = null;
-        const miObservador = new MutationObserver(() => {
-          // Si estamos editando, NO hacer nada
-          if (editando) return;
-          
-          // Debounce para evitar múltiples ejecuciones
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(() => {
-            procesarElementos();
-          }, 300);
-        });
-
-        // Iniciar observador
-        const encenderObservador = () => {
-          const t1 = document.getElementById("timespans");
-          if (t1) {
-            miObservador.observe(t1, { 
-              childList: true, 
-              subtree: true, 
-              characterData: true 
-            });
+        // Iniciar intervalo de 60 segundos para refrescar
+        const iniciarIntervalo = () => {
+          // Limpiar intervalo anterior si existe
+          if (intervaloActivo) {
+            clearInterval(intervaloActivo);
           }
           
-          const t2 = document.getElementById("clock");
-          if (t2) {
-            miObservador.observe(t2, { 
-              childList: true, 
-              subtree: true, 
-              characterData: true 
-            });
-          }
+          // Ejecutar cada 60 segundos
+          intervaloActivo = setInterval(() => {
+            // Solo ejecutar si NO estamos editando
+            if (!editando) {
+              console.log('Refrescando formato de horas...');
+              formatearHoras();
+            }
+          }, 60000); // 60 segundos
         };
 
         // Inicialización
         document.addEventListener("DOMContentLoaded", () => {
+          // Configurar todo
           procesarElementos();
-          encenderObservador();
+          
+          // Iniciar el intervalo de 60 segundos
+          iniciarIntervalo();
+          
+          console.log('✅ Configuración iniciada - Refresco cada 60 segundos');
         });
 
         // Ejecutar después de que config.js cargue
         if (document.readyState === 'complete') {
-          setTimeout(procesarElementos, 100);
+          setTimeout(() => {
+            procesarElementos();
+          }, 100);
         } else {
           window.addEventListener('load', () => {
-            setTimeout(procesarElementos, 100);
+            setTimeout(() => {
+              procesarElementos();
+            }, 100);
           });
         }
+
+        // Limpiar intervalo si la página se cierra
+        window.addEventListener('beforeunload', () => {
+          if (intervaloActivo) {
+            clearInterval(intervaloActivo);
+          }
+        });
 
       })();
     </script>
