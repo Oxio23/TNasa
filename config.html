@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V1.8 03072026 --> 
+<!-- Restyling Phone Mod V1.9 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -131,46 +131,55 @@
       }
 
       /* Alineación fluida horizontal para las horas */
+     /* --- SOLUCIÓN AL AMONTONAMIENTO --- */
+      
+      /* Forzamos que la hora de inicio se estire en todo el ancho de la fila 2 */
       .timeSpan .starttime {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
         font-size: 0.95em !important;
         color: #64748b !important;
-        margin: 2px 0 0 0 !important;
+        margin: 6px 0 0 0 !important;
         padding: 0 !important;
         background: none !important;
+        
+        /* Se convierte en una fila flex horizontal continua */
         display: inline-flex !important;
         align-items: center !important;
-        white-space: nowrap !important;
-        float: left !important;
-        width: auto !important;
+        flex-wrap: wrap !important; 
+        width: 100% !important;
       }
+      
+      /* Prefijo del relojito */
       .timeSpan .starttime::before {
         content: "🕒 Horario: ";
         font-weight: 500;
-        margin-right: 4px;
+        margin-right: 6px !important;
       }
 
+      /* La hora de fin se desacopla del grid y se posiciona de forma relativa al lado */
       .timeSpan .endtime {
-        grid-column: 1 / span 2 !important;
-        grid-row: 2 !important;
-        font-size: 0.95em !important;
-        color: #64748b !important;
-        margin: 2px 0 0 0 !important; 
-        padding: 0 !important;
-        background: none !important;
         display: inline-flex !important;
         align-items: center !important;
-        white-space: nowrap !important;
-        position: static !important; 
+        font-size: 1em !important; /* Mismo tamaño que la hora de inicio */
+        color: #64748b !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: none !important;
+        position: relative !important;
+        left: 0 !important;
+        top: 0 !important;
         width: auto !important;
+        float: none !important;
       }
-      /* Espaciado de la "a" arreglado y compacto */
+      
+      /* Separador 'a' controlado y con espacios perfectos */
       .timeSpan .endtime::before {
         content: "a";
-        margin-left: 6px !important;
-        margin-right: 6px !important;
-        color: #64748b;
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+        font-weight: normal !important;
+        color: #64748b !important;
       }
 
       /* Celda 5: Estado activo */
