@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V2.0 03072026 --> 
+<!-- Restyling Phone Mod V2.1 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -166,7 +166,6 @@
         width: auto !important;
       }
       
-      /* Separador "a" con más espacio */
       .timeSpan .endtime::before {
         content: "a";
         margin-left: 6px !important;
@@ -220,34 +219,98 @@
         transform: scale(0.98) !important;
       }
 
-      /* Input de edición de temperatura */
-      .timeSpan .temp-edit-input {
+      /* Contenedor de edición de temperatura */
+      .timeSpan .temp-edit-container {
         grid-column: 1 / span 2 !important;
         grid-row: 4 !important;
+        display: none !important;
+        margin: 4px 0 0 0 !important;
+        gap: 8px !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        justify-self: start !important;
+      }
+      
+      .timeSpan .temp-edit-container.active {
+        display: flex !important;
+      }
+
+      /* Inputs de temperatura */
+      .timeSpan .temp-input-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
         background: white !important;
         border: 2px solid #4caf50 !important;
-        color: #1e293b !important;
-        font-weight: bold !important;
-        padding: 4px 10px !important;
         border-radius: 8px !important;
+        padding: 2px 8px !important;
+      }
+      
+      .timeSpan .temp-input-group label {
+        font-size: 0.8em !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        margin: 0 !important;
+      }
+      
+      .timeSpan .temp-input-group input {
+        width: 40px !important;
+        padding: 4px 2px !important;
+        border: none !important;
+        border-radius: 4px !important;
         font-size: 1em !important;
-        margin: 4px 0 0 0 !important;
-        justify-self: start !important;
-        display: none !important;
-        width: auto !important;
-        min-width: 80px !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        background: transparent !important;
+        color: #1e293b !important;
         outline: none !important;
       }
       
-      .timeSpan .temp-edit-input:focus {
-        border-color: #2196f3 !important;
-        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2) !important;
+      .timeSpan .temp-input-group input:focus {
+        background: #f0f9ff !important;
+        border-radius: 4px !important;
       }
       
-      .timeSpan .temp-edit-input.active {
-        display: inline-block !important;
+      .timeSpan .temp-input-group .separator {
+        font-weight: bold !important;
+        color: #94a3b8 !important;
+        margin: 0 2px !important;
+      }
+
+      /* Botones de edición */
+      .timeSpan .temp-edit-buttons {
+        display: flex !important;
+        gap: 6px !important;
       }
       
+      .timeSpan .temp-edit-buttons button {
+        padding: 4px 12px !important;
+        border: none !important;
+        border-radius: 6px !important;
+        font-weight: 600 !important;
+        font-size: 0.85em !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+      }
+      
+      .timeSpan .temp-edit-buttons .btn-save {
+        background: #10b981 !important;
+        color: white !important;
+      }
+      
+      .timeSpan .temp-edit-buttons .btn-save:hover {
+        background: #059669 !important;
+      }
+      
+      .timeSpan .temp-edit-buttons .btn-cancel {
+        background: #e2e8f0 !important;
+        color: #475569 !important;
+      }
+      
+      .timeSpan .temp-edit-buttons .btn-cancel:hover {
+        background: #cbd5e1 !important;
+      }
+
       .timeSpan .force.hidden {
         display: none !important;
       }
@@ -352,29 +415,23 @@
       </div>
     </div>
 
-    <!-- Script Corregido -->
+    <!-- Script Corregido con botones de edición -->
     <script>
       (function() {
         // Función mejorada para formatear hora con separador ":"
         const formatearConDosPuntos = (texto) => {
           if (!texto) return texto;
           
-          // Limpiar cualquier separador existente y espacios
           let limpio = texto.replace(/[:,\s]/g, '');
           
-          // Si tiene 3 dígitos (ej: 800) o 4 dígitos (ej: 2030)
           if (limpio.length === 3) {
-            // Caso: 800 -> 8:00
             return limpio.substring(0, 1) + ":" + limpio.substring(1);
           } else if (limpio.length === 4) {
-            // Caso: 2030 -> 20:30
             return limpio.substring(0, 2) + ":" + limpio.substring(2);
           } else if (limpio.length === 2) {
-            // Caso: 08 -> 0:08 (hora con un dígito y minutos de 2 dígitos)
             return limpio.substring(0, 1) + ":" + limpio.substring(1);
           }
           
-          // Si ya tiene formato con ":", devolverlo
           if (texto.includes(':')) {
             return texto;
           }
@@ -382,7 +439,7 @@
           return texto;
         };
 
-        // Función para editar temperatura
+        // Función para hacer editables las temperaturas con botones
         const hacerEditablesLasTemperaturas = () => {
           document.querySelectorAll('.timeSpan').forEach(card => {
             const forceElement = card.querySelector('.force');
@@ -390,90 +447,150 @@
             const tempMax = card.querySelector('.tempmax');
             
             if (forceElement && tempMin && tempMax) {
-              // Eliminar event listeners anteriores (clonar para evitar duplicados)
-              const newForce = forceElement.cloneNode(true);
-              forceElement.parentNode.replaceChild(newForce, forceElement);
-              
-              // Usar el nuevo elemento
-              const force = card.querySelector('.force');
-              
-              // Crear input de edición
-              let inputEdit = card.querySelector('.temp-edit-input');
-              if (!inputEdit) {
-                inputEdit = document.createElement('input');
-                inputEdit.type = 'text';
-                inputEdit.className = 'temp-edit-input';
-                inputEdit.placeholder = 'Ej: 38~41';
-                // Insertar después de .force (en la misma fila grid)
-                force.parentNode.insertBefore(inputEdit, force.nextSibling);
+              // Crear contenedor de edición si no existe
+              let editContainer = card.querySelector('.temp-edit-container');
+              if (!editContainer) {
+                editContainer = document.createElement('div');
+                editContainer.className = 'temp-edit-container';
+                
+                // Input mínimo
+                const minGroup = document.createElement('div');
+                minGroup.className = 'temp-input-group';
+                minGroup.innerHTML = `
+                  <label>Min</label>
+                  <input type="number" class="temp-min-input" min="0" max="60" value="0">
+                `;
+                
+                // Separador
+                const separator = document.createElement('span');
+                separator.className = 'separator';
+                separator.textContent = '~';
+                
+                // Input máximo
+                const maxGroup = document.createElement('div');
+                maxGroup.className = 'temp-input-group';
+                maxGroup.innerHTML = `
+                  <label>Max</label>
+                  <input type="number" class="temp-max-input" min="0" max="60" value="0">
+                `;
+                
+                // Botones
+                const buttons = document.createElement('div');
+                buttons.className = 'temp-edit-buttons';
+                buttons.innerHTML = `
+                  <button class="btn-save">✓ Guardar</button>
+                  <button class="btn-cancel">✕ Cancelar</button>
+                `;
+                
+                editContainer.appendChild(minGroup);
+                editContainer.appendChild(separator);
+                editContainer.appendChild(maxGroup);
+                editContainer.appendChild(buttons);
+                
+                // Insertar después de .force
+                forceElement.parentNode.insertBefore(editContainer, forceElement.nextSibling);
               }
+              
+              // Obtener referencias
+              const force = card.querySelector('.force');
+              const container = card.querySelector('.temp-edit-container');
+              const minInput = container.querySelector('.temp-min-input');
+              const maxInput = container.querySelector('.temp-max-input');
+              const btnSave = container.querySelector('.btn-save');
+              const btnCancel = container.querySelector('.btn-cancel');
               
               // Evento click en .force para activar edición
               force.addEventListener('click', function(e) {
                 e.stopPropagation();
-                const currentText = this.textContent.trim();
-                // Extraer el rango (ej: "38~41" de "🌡️ 38~41")
-                const match = currentText.match(/(\d+~\d+)/);
-                const rangeValue = match ? match[1] : currentText;
                 
-                // Ocultar .force y mostrar input
+                // Obtener valores actuales
+                const currentText = this.textContent.trim();
+                const match = currentText.match(/(\d+)~\s*(\d+)/);
+                
+                if (match) {
+                  minInput.value = parseInt(match[1]);
+                  maxInput.value = parseInt(match[2]);
+                } else {
+                  // Valores por defecto si no se puede parsear
+                  minInput.value = tempMin.textContent || 0;
+                  maxInput.value = tempMax.textContent || 0;
+                }
+                
+                // Ocultar .force y mostrar container
                 this.classList.add('hidden');
-                inputEdit.classList.add('active');
-                inputEdit.value = rangeValue;
-                inputEdit.focus();
-                inputEdit.select();
+                container.classList.add('active');
+                
+                // Enfocar el input mínimo
+                setTimeout(() => minInput.focus(), 50);
               });
               
-              // Evento para guardar cambios
-              inputEdit.addEventListener('blur', function() {
-                guardarEdicionTemperatura(this, force, tempMin, tempMax);
-              });
+              // Función para guardar cambios
+              const guardarCambios = () => {
+                const min = parseInt(minInput.value);
+                const max = parseInt(maxInput.value);
+                
+                // Validaciones
+                if (isNaN(min) || isNaN(max)) {
+                  alert('Por favor, ingresa números válidos');
+                  return;
+                }
+                
+                if (min < 0 || min > 60 || max < 0 || max > 60) {
+                  alert('La temperatura debe estar entre 0 y 60 grados');
+                  return;
+                }
+                
+                if (min >= max) {
+                  alert('La temperatura mínima debe ser menor que la máxima');
+                  minInput.focus();
+                  return;
+                }
+                
+                // Actualizar elementos
+                force.textContent = `🌡️ ${min}~${max}`;
+                if (tempMin) tempMin.textContent = min;
+                if (tempMax) tempMax.textContent = max;
+                
+                // Cerrar edición
+                container.classList.remove('active');
+                force.classList.remove('hidden');
+                
+                console.log(`Temperatura actualizada: ${min}~${max}`);
+                // Aquí podrías agregar la llamada al backend
+              };
               
-              inputEdit.addEventListener('keydown', function(e) {
+              // Función para cancelar cambios
+              const cancelarCambios = () => {
+                container.classList.remove('active');
+                force.classList.remove('hidden');
+              };
+              
+              // Eventos de los botones
+              btnSave.addEventListener('click', guardarCambios);
+              btnCancel.addEventListener('click', cancelarCambios);
+              
+              // Enter en inputs para guardar
+              minInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
-                  this.blur();
-                } else if (e.key === 'Escape') {
-                  this.value = force.textContent.trim().replace(/[^\d~]/g, '');
-                  this.blur();
+                  e.preventDefault();
+                  maxInput.focus();
+                }
+                if (e.key === 'Escape') {
+                  cancelarCambios();
+                }
+              });
+              
+              maxInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  guardarCambios();
+                }
+                if (e.key === 'Escape') {
+                  cancelarCambios();
                 }
               });
             }
           });
-        };
-
-        const guardarEdicionTemperatura = (input, force, tempMin, tempMax) => {
-          const valor = input.value.trim();
-          // Validar formato: números separados por ~
-          const match = valor.match(/^(\d+)\s*~\s*(\d+)$/);
-          
-          if (match) {
-            const min = parseInt(match[1]);
-            const max = parseInt(match[2]);
-            
-            if (min < max) {
-              // Actualizar los elementos
-              force.textContent = `🌡️ ${min}~${max}`;
-              if (tempMin) tempMin.textContent = min;
-              if (tempMax) tempMax.textContent = max;
-              
-              // Aquí podrías llamar a una función para guardar en backend
-              console.log(`Temperatura actualizada: ${min}~${max}`);
-            } else {
-              alert('La temperatura mínima debe ser menor que la máxima');
-              input.focus();
-              input.select();
-              return;
-            }
-          } else {
-            alert('Formato incorrecto. Usa: "38~41" (mínimo~máximo)');
-            input.focus();
-            input.select();
-            return;
-          }
-          
-          // Ocultar input y mostrar force
-          input.classList.remove('active');
-          force.classList.remove('hidden');
         };
 
         const procesarElementos = () => {
