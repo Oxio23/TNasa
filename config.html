@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V2.1 03072026 --> 
+<!-- Restyling Phone Mod V2.2 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -415,9 +415,11 @@
       </div>
     </div>
 
-    <!-- Script Corregido con botones de edición -->
+    <!-- Script Corregido - NO REFRESCA DURANTE EDICIÓN -->
     <script>
       (function() {
+        let editando = false; // Flag para saber si estamos editando
+
         // Función mejorada para formatear hora con separador ":"
         const formatearConDosPuntos = (texto) => {
           if (!texto) return texto;
@@ -439,59 +441,96 @@
           return texto;
         };
 
-        // Función para hacer editables las temperaturas con botones
-        const hacerEditablesLasTemperaturas = () => {
+        // Función para formatear SOLO las horas sin tocar la edición
+        const formatearHoras = () => {
+          // Formatear reloj
+          const reloj = document.getElementById("displayBackendTime");
+          if (reloj) {
+            const textoOriginal = reloj.innerText.trim();
+            const formateado = formatearConDosPuntos(textoOriginal);
+            if (reloj.innerText !== formateado) {
+              reloj.innerText = formateado;
+            }
+          }
+
+          // Formatear horas en cada tarjeta (solo si NO estamos editando)
+          if (!editando) {
+            document.querySelectorAll(".timeSpan").forEach(card => {
+              const start = card.querySelector(".starttime");
+              const end = card.querySelector(".endtime");
+              if (start) {
+                const texto = start.innerText.trim();
+                const formateado = formatearConDosPuntos(texto);
+                if (start.innerText !== formateado) {
+                  start.innerText = formateado;
+                }
+              }
+              if (end) {
+                const texto = end.innerText.trim();
+                const formateado = formatearConDosPuntos(texto);
+                if (end.innerText !== formateado) {
+                  end.innerText = formateado;
+                }
+              }
+            });
+          }
+        };
+
+        // Función para configurar la edición de temperatura (solo una vez)
+        const configurarEditablesTemperaturas = () => {
           document.querySelectorAll('.timeSpan').forEach(card => {
+            // Verificar si ya tiene el contenedor de edición
+            if (card.querySelector('.temp-edit-container')) {
+              return; // Ya está configurado
+            }
+
             const forceElement = card.querySelector('.force');
             const tempMin = card.querySelector('.tempmin');
             const tempMax = card.querySelector('.tempmax');
             
             if (forceElement && tempMin && tempMax) {
-              // Crear contenedor de edición si no existe
-              let editContainer = card.querySelector('.temp-edit-container');
-              if (!editContainer) {
-                editContainer = document.createElement('div');
-                editContainer.className = 'temp-edit-container';
-                
-                // Input mínimo
-                const minGroup = document.createElement('div');
-                minGroup.className = 'temp-input-group';
-                minGroup.innerHTML = `
-                  <label>Min</label>
-                  <input type="number" class="temp-min-input" min="0" max="60" value="0">
-                `;
-                
-                // Separador
-                const separator = document.createElement('span');
-                separator.className = 'separator';
-                separator.textContent = '~';
-                
-                // Input máximo
-                const maxGroup = document.createElement('div');
-                maxGroup.className = 'temp-input-group';
-                maxGroup.innerHTML = `
-                  <label>Max</label>
-                  <input type="number" class="temp-max-input" min="0" max="60" value="0">
-                `;
-                
-                // Botones
-                const buttons = document.createElement('div');
-                buttons.className = 'temp-edit-buttons';
-                buttons.innerHTML = `
-                  <button class="btn-save">✓ Guardar</button>
-                  <button class="btn-cancel">✕ Cancelar</button>
-                `;
-                
-                editContainer.appendChild(minGroup);
-                editContainer.appendChild(separator);
-                editContainer.appendChild(maxGroup);
-                editContainer.appendChild(buttons);
-                
-                // Insertar después de .force
-                forceElement.parentNode.insertBefore(editContainer, forceElement.nextSibling);
-              }
+              // Crear contenedor de edición
+              const editContainer = document.createElement('div');
+              editContainer.className = 'temp-edit-container';
               
-              // Obtener referencias
+              // Input mínimo
+              const minGroup = document.createElement('div');
+              minGroup.className = 'temp-input-group';
+              minGroup.innerHTML = `
+                <label>Min</label>
+                <input type="number" class="temp-min-input" min="0" max="60" value="0">
+              `;
+              
+              // Separador
+              const separator = document.createElement('span');
+              separator.className = 'separator';
+              separator.textContent = '~';
+              
+              // Input máximo
+              const maxGroup = document.createElement('div');
+              maxGroup.className = 'temp-input-group';
+              maxGroup.innerHTML = `
+                <label>Max</label>
+                <input type="number" class="temp-max-input" min="0" max="60" value="0">
+              `;
+              
+              // Botones
+              const buttons = document.createElement('div');
+              buttons.className = 'temp-edit-buttons';
+              buttons.innerHTML = `
+                <button class="btn-save">✓ Guardar</button>
+                <button class="btn-cancel">✕ Cancelar</button>
+              `;
+              
+              editContainer.appendChild(minGroup);
+              editContainer.appendChild(separator);
+              editContainer.appendChild(maxGroup);
+              editContainer.appendChild(buttons);
+              
+              // Insertar después de .force
+              forceElement.parentNode.insertBefore(editContainer, forceElement.nextSibling);
+              
+              // Configurar eventos
               const force = card.querySelector('.force');
               const container = card.querySelector('.temp-edit-container');
               const minInput = container.querySelector('.temp-min-input');
@@ -503,6 +542,9 @@
               force.addEventListener('click', function(e) {
                 e.stopPropagation();
                 
+                // Activar flag de edición
+                editando = true;
+                
                 // Obtener valores actuales
                 const currentText = this.textContent.trim();
                 const match = currentText.match(/(\d+)~\s*(\d+)/);
@@ -511,7 +553,6 @@
                   minInput.value = parseInt(match[1]);
                   maxInput.value = parseInt(match[2]);
                 } else {
-                  // Valores por defecto si no se puede parsear
                   minInput.value = tempMin.textContent || 0;
                   maxInput.value = tempMax.textContent || 0;
                 }
@@ -529,7 +570,6 @@
                 const min = parseInt(minInput.value);
                 const max = parseInt(maxInput.value);
                 
-                // Validaciones
                 if (isNaN(min) || isNaN(max)) {
                   alert('Por favor, ingresa números válidos');
                   return;
@@ -555,14 +595,17 @@
                 container.classList.remove('active');
                 force.classList.remove('hidden');
                 
+                // Desactivar flag de edición
+                editando = false;
+                
                 console.log(`Temperatura actualizada: ${min}~${max}`);
-                // Aquí podrías agregar la llamada al backend
               };
               
               // Función para cancelar cambios
               const cancelarCambios = () => {
                 container.classList.remove('active');
                 force.classList.remove('hidden');
+                editando = false;
               };
               
               // Eventos de los botones
@@ -593,58 +636,56 @@
           });
         };
 
+        // Función principal de procesamiento
         const procesarElementos = () => {
-          // Formatear reloj
-          const reloj = document.getElementById("displayBackendTime");
-          if (reloj) {
-            const textoOriginal = reloj.innerText.trim();
-            reloj.innerText = formatearConDosPuntos(textoOriginal);
-          }
-
-          // Formatear horas en cada tarjeta
-          document.querySelectorAll(".timeSpan").forEach(card => {
-            const start = card.querySelector(".starttime");
-            const end = card.querySelector(".endtime");
-            if (start) {
-              const texto = start.innerText.trim();
-              start.innerText = formatearConDosPuntos(texto);
-            }
-            if (end) {
-              const texto = end.innerText.trim();
-              end.innerText = formatearConDosPuntos(texto);
-            }
-          });
+          // Solo formatear horas (sin tocar la edición)
+          formatearHoras();
           
-          // Hacer editables las temperaturas
-          hacerEditablesLasTemperaturas();
+          // Configurar editables (solo si no están configurados)
+          configurarEditablesTemperaturas();
         };
 
-        // Observador para cambios en el DOM
-        let observadorActivo = false;
+        // Observador más inteligente
+        let timeoutId = null;
         const miObservador = new MutationObserver(() => {
-          miObservador.disconnect();
-          observadorActivo = false;
-          procesarElementos();
-          encenderObservador();
+          // Si estamos editando, NO hacer nada
+          if (editando) return;
+          
+          // Debounce para evitar múltiples ejecuciones
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            procesarElementos();
+          }, 300);
         });
 
+        // Iniciar observador
         const encenderObservador = () => {
-          if (observadorActivo) return;
-          observadorActivo = true;
-          
           const t1 = document.getElementById("timespans");
-          if (t1) miObservador.observe(t1, { childList: true, subtree: true, characterData: true });
+          if (t1) {
+            miObservador.observe(t1, { 
+              childList: true, 
+              subtree: true, 
+              characterData: true 
+            });
+          }
           
           const t2 = document.getElementById("clock");
-          if (t2) miObservador.observe(t2, { childList: true, subtree: true, characterData: true });
+          if (t2) {
+            miObservador.observe(t2, { 
+              childList: true, 
+              subtree: true, 
+              characterData: true 
+            });
+          }
         };
 
+        // Inicialización
         document.addEventListener("DOMContentLoaded", () => {
           procesarElementos();
           encenderObservador();
         });
 
-        // También ejecutar después de que config.js cargue
+        // Ejecutar después de que config.js cargue
         if (document.readyState === 'complete') {
           setTimeout(procesarElementos, 100);
         } else {
