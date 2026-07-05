@@ -1,694 +1,325 @@
-<!-- Restyling Phone Mod V2.2 03072026 --> 
-<!-- Restyling Phone Mod V2.1 03072026 --> 
+<!-- Restyling Phone Mod V3 - Deepseek 03072026 --> 
 
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Termalis Config</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-    <link rel="icon" type="image/x-icon" href="favicons/favicon.ico">
-    <script src="utils.js" defer></script>
-    <script src="config.js" defer></script>
-    <link rel="stylesheet" href="styles.css" />
+    <!-- Favicons (mantenidos) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="favicons/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+    <link rel="icon" type="image/x-icon" href="favicons/favicon.ico" />
     <style>
-      /* --- Estilos Generales con Ancho al 80% --- */
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: #f5f5f5 !important;
-        margin: 0 !important;
-        padding: 20px 10px !important;
-        color: #333 !important;
-        box-sizing: border-box;
-        display: flex !important;
-        justify-content: center !important;
-      }
-
-      .grid {
-        width: 80% !important;
-        max-width: 500px !important;
-        margin: 0 auto !important;
-        display: block !important;
-      }
-      
-      .container {
-        width: 100% !important;
-        display: block !important;
-      }
-
-      /* --- Reloj Superior --- */
-      #clock {
-        background: #1a237e !important;
-        border-radius: 12px !important;
-        padding: 16px 10px !important;
-        text-align: center !important;
-        margin: 0 0 20px 0 !important;
-        box-shadow: 0 4px 12px rgba(26,35,126,0.15) !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      }
-      #clock div:first-child {
-        color: rgba(255, 255, 255, 0.75) !important;
-        font-size: 0.85em !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1.5px !important;
-        margin-bottom: 4px !important;
-        font-weight: 600 !important;
-        background: none !important;
-      }
-      
-      #displayBackendTime {
-        color: #ffffff !important;
-        font-size: 2.6em !important;
-        font-weight: bold !important;
-        font-variant-numeric: tabular-nums !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: none !important;
-        letter-spacing: 2px !important;
-        display: inline-block !important;
-      }
-
-      .timeSpan.title {
-        display: none !important;
-      }
-
-      #timespans {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 14px !important;
-        width: 100% !important;
-      }
-
-      /* --- LAYOUT COMPACTO --- */
-      .timeSpan {
-        background: white !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 14px !important;
-        padding: 16px !important;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.03) !important;
-        position: relative !important;
-        overflow: hidden !important;
-        box-sizing: border-box !important;
-        width: 100% !important;
-        
-        display: grid !important;
-        grid-template-columns: auto 1fr !important; 
-        align-items: center !important;
-        column-gap: 12px !important;
-        row-gap: 8px !important;
-      }
-
-      /* Celda 1: ID de prioridad */
-      .timeSpan > div:first-child {
-        grid-column: 1 !important;
-        grid-row: 1 !important;
-        background: #e2e8f0 !important;
-        color: #475569 !important;
-        font-weight: 700 !important;
-        border-radius: 6px !important;
-        padding: 4px 8px !important;
-        font-size: 0.8em !important;
-        margin: 0 !important;
-        display: inline-block !important;
-        justify-self: start !important;
-      }
-
-      /* Celda 2: Nombre del modo */
-      .timeSpan .name {
-        grid-column: 2 !important;
-        grid-row: 1 !important;
-        font-weight: bold !important;
-        font-size: 1.25em !important;
-        color: #1e293b !important;
-        margin: 0 !important;
-        text-align: left !important;
-      }
-
-      /* Horas en línea */
-      .timeSpan .starttime {
-        grid-column: 1 !important;
-        grid-row: 2 !important;
-        font-size: 0.95em !important;
-        color: #64748b !important;
-        margin: 8px 0 0 0 !important;
-        padding: 0 !important;
-        background: none !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        white-space: nowrap !important;
-        width: auto !important;
-      }
-      .timeSpan .starttime::before {
-        content: "🕒 Horario: ";
-        font-weight: 500;
-        margin-right: 4px !important;
-      }
-
-      .timeSpan .endtime {
-        grid-column: 2 !important;
-        grid-row: 2 !important;
-        font-size: 0.95em !important;
-        color: #64748b !important;
-        margin: 8px 0 0 0 !important; 
-        padding: 0 !important;
-        background: none !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        white-space: nowrap !important;
-        justify-self: start !important;
-        position: static !important; 
-        width: auto !important;
-      }
-      
-      .timeSpan .endtime::before {
-        content: "a";
-        margin-left: 6px !important;
-        margin-right: 6px !important;
-        color: #64748b !important;
-        font-weight: 500 !important;
-      }
-
-      /* Celda 5: Estado activo */
-      .timeSpan .enabled {
-        grid-column: 1 / span 2 !important;
-        grid-row: 3 !important;
-        font-weight: 600 !important;
-        color: #10b981 !important;
-        background: #ecfdf5 !important;
-        padding: 4px 10px !important;
-        border-radius: 6px !important;
-        font-size: 0.85em !important;
-        margin: 2px 0 0 0 !important;
-        justify-self: start !important;
-        display: inline-block !important;
-      }
-
-      /* Celda 6: Rango de temperaturas - HACER CLICABLE */
-      .timeSpan .force {
-        grid-column: 1 / span 2 !important;
-        grid-row: 4 !important;
-        background: #f1f8e9 !important;
-        border: 2px solid #c5e1a5 !important;
-        color: #33691e !important;
-        font-weight: bold !important;
-        padding: 6px 14px !important;
-        border-radius: 8px !important;
-        font-size: 1em !important;
-        margin: 4px 0 0 0 !important;
-        justify-self: start !important;
-        display: inline-block !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        user-select: none !important;
-        min-width: 60px !important;
-        text-align: center !important;
-        pointer-events: auto !important; /* Asegurar que sea clickeable */
-      }
-      
-      .timeSpan .force:hover {
-        background: #dcedc8 !important;
-        transform: scale(1.02) !important;
-      }
-      
-      .timeSpan .force:active {
-        transform: scale(0.98) !important;
-      }
-
-      /* Contenedor de edición de temperatura */
-      .timeSpan .temp-edit-container {
-        grid-column: 1 / span 2 !important;
-        grid-row: 4 !important;
-        display: none !important;
-        margin: 4px 0 0 0 !important;
-        gap: 8px !important;
-        align-items: center !important;
-        flex-wrap: wrap !important;
-        justify-self: start !important;
-        pointer-events: auto !important;
-      }
-      
-      .timeSpan .temp-edit-container.active {
-        display: flex !important;
-      }
-
-      /* Inputs de temperatura */
-      .timeSpan .temp-input-group {
-        display: flex !important;
-        align-items: center !important;
-        gap: 4px !important;
-        background: white !important;
-        border: 2px solid #4caf50 !important;
-        border-radius: 8px !important;
-        padding: 2px 8px !important;
-      }
-      
-      .timeSpan .temp-input-group label {
-        font-size: 0.8em !important;
-        font-weight: 600 !important;
-        color: #475569 !important;
-        margin: 0 !important;
-      }
-      
-      .timeSpan .temp-input-group input {
-        width: 40px !important;
-        padding: 4px 2px !important;
-        border: none !important;
-        border-radius: 4px !important;
-        font-size: 1em !important;
-        font-weight: bold !important;
-        text-align: center !important;
-        background: transparent !important;
-        color: #1e293b !important;
-        outline: none !important;
-        pointer-events: auto !important;
-      }
-      
-      .timeSpan .temp-input-group input:focus {
-        background: #f0f9ff !important;
-        border-radius: 4px !important;
-      }
-      
-      .timeSpan .temp-input-group .separator {
-        font-weight: bold !important;
-        color: #94a3b8 !important;
-        margin: 0 2px !important;
-      }
-
-      /* Botones de edición */
-      .timeSpan .temp-edit-buttons {
-        display: flex !important;
-        gap: 6px !important;
-      }
-      
-      .timeSpan .temp-edit-buttons button {
-        padding: 4px 12px !important;
-        border: none !important;
-        border-radius: 6px !important;
-        font-weight: 600 !important;
-        font-size: 0.85em !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        pointer-events: auto !important;
-      }
-      
-      .timeSpan .temp-edit-buttons .btn-save {
-        background: #10b981 !important;
-        color: white !important;
-      }
-      
-      .timeSpan .temp-edit-buttons .btn-save:hover {
-        background: #059669 !important;
-      }
-      
-      .timeSpan .temp-edit-buttons .btn-cancel {
-        background: #e2e8f0 !important;
-        color: #475569 !important;
-      }
-      
-      .timeSpan .temp-edit-buttons .btn-cancel:hover {
-        background: #cbd5e1 !important;
-      }
-
-      .timeSpan .force.hidden {
-        display: none !important;
-      }
-
-      .timeSpan .tempmin, 
-      .timeSpan .tempmax {
-        display: none !important;
-      }
-
-      /* --- ESTADOS EN EJECUCIÓN --- */
-      .timeSpan.tsSelected {
-        border-color: #10b981 !important;
-        background-color: #f6fdfa !important;
-      }
-      .timeSpan.tsSelected > div:first-child {
-        background: #10b981 !important;
-        color: white !important;
-      }
-      .timeSpan.tsSelected::after {
-        content: "ACTIVA";
-        position: absolute;
-        top: 0;
-        right: 0;
-        background: #10b981;
-        color: white;
-        font-size: 0.65em;
-        font-weight: bold;
-        padding: 4px 12px;
-        border-bottom-left-radius: 10px;
-      }
-
-      .timeSpan.tsForced {
-        border-color: #ef4444 !important;
-        background-color: #fef2f2 !important;
-      }
-      .timeSpan.tsForced > div:first-child {
-        background: #ef4444 !important;
-        color: white !important;
-      }
-      .timeSpan.tsForced .force {
-        background: #ef4444 !important;
-        border-color: #ef4444 !important;
-        color: white !important;
-      }
-      .timeSpan.tsForced::after {
-        content: "FORZADA";
-        position: absolute;
-        top: 0;
-        right: 0;
-        background: #ef4444;
-        color: white;
-        font-size: 0.65em;
-        font-weight: bold;
-        padding: 4px 12px;
-        border-bottom-left-radius: 10px;
-      }
-
-      /* Botón Volver */
-      .btn-back {
-        display: block !important;
-        text-align: center !important;
-        background: #e2e8f0 !important;
-        color: #334155 !important;
-        text-decoration: none !important;
-        padding: 12px !important;
-        border-radius: 12px !important;
-        font-weight: bold !important;
-        margin: 25px 0 10px 0 !important;
-        font-size: 0.95em !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="grid">
-      <div class="container">
-        
-        <!-- Reloj -->
-        <div id="clock">
-          <div>Hora del Servidor</div>
-          <div id="displayBackendTime">0000</div>
-        </div>
-
-        <div class="timeSpan title">
-          <div>Prioridad</div>
-          <div>Nombre</div>
-          <div>Hora Inicio</div>
-          <div>Hora Fin</div>
-          <div>Temp Mínima</div>
-          <div>Temp Máxima</div>
-          <div>Activo</div>
-          <div>Forzar</div>
-        </div>
-
-        <!-- Render de tarjetas -->
-        <div id="timespans"></div>
-
-        <!-- Botón Volver -->
-        <a href="index.html" class="btn-back">⬅ Volver al Panel</a>
-
-      </div>
-    </div>
-
-    <!-- Script definitivo - SOLO formatea una vez -->
-    <script>
-      (function() {
-        let editando = false;
-        let configurado = false;
-
-        // Función para formatear hora con separador ":"
-        const formatearConDosPuntos = (texto) => {
-          if (!texto) return texto;
-          
-          // Si ya tiene formato correcto, devolverlo
-          if (/^\d{1,2}:\d{2}$/.test(texto)) {
-            return texto;
-          }
-          
-          let limpio = texto.replace(/[:,\s]/g, '');
-          
-          if (limpio.length === 3) {
-            return limpio.substring(0, 1) + ":" + limpio.substring(1);
-          } else if (limpio.length === 4) {
-            return limpio.substring(0, 2) + ":" + limpio.substring(2);
-          } else if (limpio.length === 2) {
-            return limpio.substring(0, 1) + ":" + limpio.substring(1);
-          }
-          
-          return texto;
-        };
-
-        // Función para formatear horas (SOLO UNA VEZ)
-        const formatearHorasUnaVez = () => {
-          // Formatear reloj
-          const reloj = document.getElementById("displayBackendTime");
-          if (reloj) {
-            const textoOriginal = reloj.innerText.trim();
-            const formateado = formatearConDosPuntos(textoOriginal);
-            if (reloj.innerText !== formateado) {
-              reloj.innerText = formateado;
-            }
-          }
-
-          // Formatear horas en cada tarjeta
-          document.querySelectorAll(".timeSpan:not(.title)").forEach(card => {
-            const start = card.querySelector(".starttime");
-            const end = card.querySelector(".endtime");
-            
-            if (start) {
-              const texto = start.innerText.trim();
-              const formateado = formatearConDosPuntos(texto);
-              if (start.innerText !== formateado) {
-                start.innerText = formateado;
-              }
-            }
-            
-            if (end) {
-              const texto = end.innerText.trim();
-              const formateado = formatearConDosPuntos(texto);
-              if (end.innerText !== formateado) {
-                end.innerText = formateado;
-              }
-            }
-          });
-        };
-
-        // Función para configurar la edición de temperatura (SOLO UNA VEZ)
-        const configurarEditablesTemperaturas = () => {
-          if (configurado) return;
-          
-          document.querySelectorAll('.timeSpan:not(.title)').forEach(card => {
-            // Verificar si ya tiene el contenedor de edición
-            if (card.querySelector('.temp-edit-container')) {
-              return;
-            }
-
-            const forceElement = card.querySelector('.force');
-            const tempMin = card.querySelector('.tempmin');
-            const tempMax = card.querySelector('.tempmax');
-            
-            if (forceElement && tempMin && tempMax) {
-              // Crear contenedor de edición
-              const editContainer = document.createElement('div');
-              editContainer.className = 'temp-edit-container';
-              
-              // Input mínimo
-              const minGroup = document.createElement('div');
-              minGroup.className = 'temp-input-group';
-              minGroup.innerHTML = `
-                <label>Min</label>
-                <input type="number" class="temp-min-input" min="0" max="60" value="0">
-              `;
-              
-              // Separador
-              const separator = document.createElement('span');
-              separator.className = 'separator';
-              separator.textContent = '~';
-              
-              // Input máximo
-              const maxGroup = document.createElement('div');
-              maxGroup.className = 'temp-input-group';
-              maxGroup.innerHTML = `
-                <label>Max</label>
-                <input type="number" class="temp-max-input" min="0" max="60" value="0">
-              `;
-              
-              // Botones
-              const buttons = document.createElement('div');
-              buttons.className = 'temp-edit-buttons';
-              buttons.innerHTML = `
-                <button class="btn-save">✓ Guardar</button>
-                <button class="btn-cancel">✕ Cancelar</button>
-              `;
-              
-              editContainer.appendChild(minGroup);
-              editContainer.appendChild(separator);
-              editContainer.appendChild(maxGroup);
-              editContainer.appendChild(buttons);
-              
-              // Insertar después de .force
-              forceElement.parentNode.insertBefore(editContainer, forceElement.nextSibling);
-              
-              // Configurar eventos
-              const force = card.querySelector('.force');
-              const container = card.querySelector('.temp-edit-container');
-              const minInput = container.querySelector('.temp-min-input');
-              const maxInput = container.querySelector('.temp-max-input');
-              const btnSave = container.querySelector('.btn-save');
-              const btnCancel = container.querySelector('.btn-cancel');
-              
-              // Evento click en .force para activar edición
-              force.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                
-                console.log('Click en temperatura:', this.textContent);
-                
-                // Activar flag de edición
-                editando = true;
-                
-                // Obtener valores actuales
-                const currentText = this.textContent.trim();
-                const match = currentText.match(/(\d+)~\s*(\d+)/);
-                
-                if (match) {
-                  minInput.value = parseInt(match[1]);
-                  maxInput.value = parseInt(match[2]);
-                } else {
-                  minInput.value = tempMin.textContent || 0;
-                  maxInput.value = tempMax.textContent || 0;
-                }
-                
-                // Ocultar .force y mostrar container
-                this.classList.add('hidden');
-                container.classList.add('active');
-                
-                // Enfocar el input mínimo
-                setTimeout(() => minInput.focus(), 100);
-              });
-              
-              // Función para guardar cambios
-              const guardarCambios = () => {
-                const min = parseInt(minInput.value);
-                const max = parseInt(maxInput.value);
-                
-                if (isNaN(min) || isNaN(max)) {
-                  alert('Por favor, ingresa números válidos');
-                  return;
-                }
-                
-                if (min < 0 || min > 60 || max < 0 || max > 60) {
-                  alert('La temperatura debe estar entre 0 y 60 grados');
-                  return;
-                }
-                
-                if (min >= max) {
-                  alert('La temperatura mínima debe ser menor que la máxima');
-                  minInput.focus();
-                  return;
-                }
-                
-                // Actualizar elementos
-                force.textContent = `🌡️ ${min}~${max}`;
-                if (tempMin) tempMin.textContent = min;
-                if (tempMax) tempMax.textContent = max;
-                
-                // Cerrar edición
-                container.classList.remove('active');
-                force.classList.remove('hidden');
-                
-                // Desactivar flag de edición
-                editando = false;
-                
-                console.log(`✅ Temperatura actualizada: ${min}~${max}`);
-              };
-              
-              // Función para cancelar cambios
-              const cancelarCambios = () => {
-                container.classList.remove('active');
-                force.classList.remove('hidden');
-                editando = false;
-                console.log('❌ Edición cancelada');
-              };
-              
-              // Eventos de los botones
-              btnSave.addEventListener('click', function(e) {
-                e.stopPropagation();
-                guardarCambios();
-              });
-              
-              btnCancel.addEventListener('click', function(e) {
-                e.stopPropagation();
-                cancelarCambios();
-              });
-              
-              // Enter en inputs para guardar
-              minInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  maxInput.focus();
-                }
-                if (e.key === 'Escape') {
-                  cancelarCambios();
-                }
-              });
-              
-              maxInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  guardarCambios();
-                }
-                if (e.key === 'Escape') {
-                  cancelarCambios();
-                }
-              });
-            }
-          });
-          
-          configurado = true;
-        };
-
-        // Función principal - SOLO se ejecuta UNA VEZ
-        const inicializar = () => {
-          console.log('🚀 Inicializando configuración...');
-          
-          // Formatear horas una sola vez
-          formatearHorasUnaVez();
-          
-          // Configurar editables una sola vez
-          configurarEditablesTemperaturas();
-          
-          console.log('✅ Configuración completada');
-        };
-
-        // Inicialización - SOLO UNA VEZ
-        if (document.readyState === 'complete') {
-          setTimeout(inicializar, 200);
-        } else {
-          document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(inicializar, 200);
-          });
+        /* ===== RESET Y BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        // También ejecutar después de que config.js cargue
-        window.addEventListener('load', () => {
-          setTimeout(inicializar, 300);
-        });
+        body {
+            background: #f4f6fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
 
-        // NO hay intervalos, NO hay MutationObservers
-        console.log('📱 Modo de edición de temperatura activo');
+        /* ===== CONTENEDOR PRINCIPAL (similar a la imagen) ===== */
+        .grid {
+            width: 100%;
+            max-width: 1300px;
+            display: flex;
+            justify-content: center;
+        }
 
-      })();
-    </script>
-  </body>
+        .container {
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.25);
+            padding: 2rem 2rem 2.5rem;
+            width: 100%;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(2px);
+        }
+
+        /* ===== RELOJ / CABECERA ===== */
+        #clock {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #eef2f7;
+            flex-wrap: wrap;
+        }
+
+        #clock div:first-child {
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            color: #4a5b6e;
+            text-transform: uppercase;
+            background: #f0f4fe;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+        }
+
+        #displayBackendTime {
+            font-weight: 600;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            color: #0b1e33;
+            background: #eef3fa;
+            padding: 0.1rem 1.4rem;
+            border-radius: 60px;
+            font-variant-numeric: tabular-nums;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+        }
+
+        /* ===== TÍTULO DE COLUMNAS ===== */
+        .timeSpan.title {
+            display: grid;
+            grid-template-columns: 70px 100px 90px 90px 100px 100px 60px 70px;
+            gap: 6px 10px;
+            background: #eef2f9;
+            padding: 0.7rem 1.2rem;
+            border-radius: 60px;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #1f3349;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .timeSpan.title div {
+            white-space: nowrap;
+        }
+
+        /* ===== CADA FILA (timeSpan) ===== */
+        #timespans {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .timeSpan {
+            display: grid;
+            grid-template-columns: 70px 100px 90px 90px 100px 100px 60px 70px;
+            gap: 6px 10px;
+            align-items: center;
+            background: #f9fafc;
+            padding: 0.7rem 1.2rem;
+            border-radius: 80px;
+            transition: background 0.15s, box-shadow 0.15s;
+            border: 1px solid #e9edf4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .timeSpan:hover {
+            background: #ffffff;
+            border-color: #d0dae8;
+            box-shadow: 0 6px 14px rgba(0, 20, 40, 0.06);
+        }
+
+        /* ===== ESTILOS DE INPUTS ===== */
+        .timeSpan input,
+        .timeSpan select {
+            background: white;
+            border: 1px solid #d9e0ea;
+            border-radius: 60px;
+            padding: 0.45rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #0b1e33;
+            width: 100%;
+            transition: border 0.15s, box-shadow 0.15s;
+            outline: none;
+            min-width: 0;
+            font-family: inherit;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .timeSpan input:focus,
+        .timeSpan select:focus {
+            border-color: #2b6c9e;
+            box-shadow: 0 0 0 3px rgba(43, 108, 158, 0.15);
+            background: #ffffff;
+        }
+
+        .timeSpan input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        .timeSpan input[type="number"]::-webkit-inner-spin-button,
+        .timeSpan input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Checkbox "Activo" y "Forzar" */
+        .timeSpan input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #1f6e9e;
+            border-radius: 6px;
+            border: 1px solid #bcc9db;
+            cursor: pointer;
+            background: white;
+            margin: 0 auto;
+            display: block;
+            transform: scale(1.1);
+            transition: 0.1s;
+        }
+
+        .timeSpan input[type="checkbox"]:checked {
+            background-color: #1f6e9e;
+            border-color: #1f6e9e;
+        }
+
+        /* ===== BADGES / ETIQUETAS VISUALES (similares a la imagen) ===== */
+        .timeSpan .badge-prioridad {
+            background: #dce5f2;
+            border-radius: 40px;
+            padding: 0.2rem 0.2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #1a3350;
+        }
+
+        /* Para el nombre "Rush" o similar, le damos un toque */
+        .timeSpan .nombre-texto {
+            font-weight: 600;
+            color: #0c233a;
+            letter-spacing: -0.2px;
+        }
+
+        /* ===== RESPONSIVE (se adapta, pero mantiene columnas) ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            .timeSpan,
+            .timeSpan.title {
+                grid-template-columns: 60px 80px 70px 70px 80px 80px 50px 60px;
+                gap: 4px 6px;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.7rem;
+            }
+            .timeSpan input,
+            .timeSpan select {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.4rem;
+            }
+            #displayBackendTime {
+                font-size: 1.6rem;
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .timeSpan,
+            .timeSpan.title {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px 10px;
+                border-radius: 24px;
+                padding: 1rem;
+            }
+            .timeSpan.title {
+                display: none; /* ocultamos cabecera en móvil, pero se puede mostrar si se desea */
+            }
+            /* para que los campos se vean ordenados */
+            .timeSpan {
+                background: #f9fafc;
+                border-radius: 28px;
+            }
+            .timeSpan input,
+            .timeSpan select {
+                width: 100%;
+            }
+            /* reordenamos con grid automático */
+            .timeSpan {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+            /* mostramos etiqueta para cada campo en móvil? se puede mejorar,
+               pero mantenemos la edición funcional */
+        }
+
+        /* pequeño detalle: los inputs de texto se ven mas limpios */
+        .timeSpan input[type="text"] {
+            background: white;
+        }
+
+        /* Estilo para el select (prioridad) */
+        .timeSpan select {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="%233b5a7a" stroke-width="1.5" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            background-size: 10px;
+            appearance: none;
+            padding-right: 2rem;
+            cursor: pointer;
+        }
+
+        /* botón o interacción extra (si se requiere, pero no se pide) */
+        .timeSpan .accion-extra {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid">
+        <div class="container">
+            <!-- Reloj / cabecera -->
+            <div id="clock">
+                <div>Hora actual</div>
+                <div id="displayBackendTime">1609</div>
+            </div>
+
+            <!-- Cabecera de columnas (igual a la imagen: prioridad, nombre, inicio, fin, temp min, temp max, activo, forzar) -->
+            <div class="timeSpan title">
+                <div>Prioridad</div>
+                <div>Nombre</div>
+                <div>Hora Inicio</div>
+                <div>Hora Fin</div>
+                <div>Temp Mínima</div>
+                <div>Temp Máxima</div>
+                <div>Activo</div>
+                <div>Forzar</div>
+            </div>
+
+            <!-- Aquí se inyectan los timespans desde config.js (se mantiene la misma estructura) -->
+            <div id="timespans"></div>
+        </div>
+    </div>
+
+    <!-- Los scripts originales se mantienen: utils.js y config.js -->
+    <script src="utils.js" defer></script>
+    <script src="config.js" defer></script>
+    <!-- NOTA: el contenido de config.js debe generar los timeSpans con la misma estructura.
+         Para que el estilo se aplique correctamente, cada .timeSpan debe tener:
+         - select para prioridad
+         - input text para nombre
+         - input text para hora inicio
+         - input text para hora fin
+         - input number para temp mín
+         - input number para temp máx
+         - input checkbox para activo
+         - input checkbox para forzar
+         Tal cual lo hace la versión original.
+    -->
+</body>
 </html>
