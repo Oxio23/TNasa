@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V4.2 - Gemi 06072026 -->
+<!-- Restyling Phone Mod V4.3 - Gemi 06072026 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -242,7 +242,7 @@
 
         /* Dibujamos el botón visual con CSS */
         #timespans .timeSpan > *:nth-child(8)::after {
-            content: "⚠️ FORZAR MODO" !important;
+            content: "🛑 FORZAR MODO" !important;
             display: block !important;
             width: 100% !important;
             background: #f1f5f9 !important;
@@ -264,13 +264,12 @@
             background: #e2e8f0 !important;
             border-color: #94a3b8 !important;
         }
-
-        /* Cuando se activa el checkbox oculto, el botón pasa a rojo brillante */
-        #timespans .timeSpan > *:nth-child(8):has(input:checked)::after {
+	/* Cuando la tarjeta madre tiene la clase tsForced, cambiamos el diseño y texto del botón interno */
+        #timespans .timeSpan.tsForced > *:nth-child(8)::after {
             background: #ef4444 !important;
             border-color: #dc2626 !important;
             color: #ffffff !important;
-            content: "🛑 MODO FORZADO" !important;
+            content: "⚠️ MODO FORZADO" !important;
             box-shadow: 0 4px 10px rgba(239,68,68,0.2) !important;
         }
  </style>
