@@ -1,4 +1,4 @@
-<!-- Restyling Phone Mod V4.0 - Deep+Gemi 06072026 -->
+<!-- Restyling Phone Mod V4.1 - Deep+Gemi 06072026 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -113,19 +113,16 @@
             display: flex !important;
             flex-direction: column !important;
             gap: 6px !important;
-            font-size: 0.75em !important;
-            font-weight: 600 !important;
-            color: #64748b !important;
             text-transform: uppercase !important;
             letter-spacing: 0.6px !important;
             
-            /* Destacamos los valores modificables del backend (Textos nativos) */
+            /* Destacamos los valores modificables con buen tamaño y negrita */
             font-size: 1.1em !important; 
             font-weight: 700 !important;
             color: #0f172a !important; 
         }
 
-        /* Re-maquetación de labels (mantienen un tamaño sutil arriba del valor) */
+        /* Re-maquetación de labels fijas en gris sutil arriba del valor */
         #timespans .timeSpan > *::before {
             font-size: 0.68rem !important;
             font-weight: 600 !important;
@@ -143,7 +140,7 @@
         #timespans .timeSpan > *:nth-child(7)::before { content: "✅ ACTIVO"; }
         #timespans .timeSpan > *:nth-child(8)::before { content: "⚡ FORZAR"; }
 
-        /* Color especial para estados booleanos legibles a primera vista */
+        /* Color especial destacado para el estado activo */
         #timespans .timeSpan > *:nth-child(7) {
             color: #1a237e !important;
         }
@@ -236,70 +233,5 @@
             <a href="index.html" class="btn-back">⬅ Volver al Panel</a>
         </div>
     </div>
-
-    <script>
-        (function() {
-            // Convierte strings como "856" en "08:56" y "2230" en "22:30"
-            const formatearTextoHora = (texto) => {
-                let limpio = texto.replace(/[:,\s]/g, '').trim();
-                if (!/^\d+$/.test(limpio)) return texto; 
-                
-                // Rellenar con ceros a la izquierda si tiene 3 dígitos (ej: 856 -> 0856)
-                if (limpio.length === 3) limpio = '0' + limpio;
-                
-                if (limpio.length === 4) {
-                    return limpio.substring(0, 2) + ":" + limpio.substring(2);
-                }
-                return texto;
-            };
-
-            const procesarFormateoEstricto = () => {
-                // 1. Formatear el Reloj principal
-                const reloj = document.getElementById('displayBackendTime');
-                if (reloj) {
-                    const textoActual = reloj.childNodes[0]?.nodeValue || reloj.innerText;
-                    if (textoActual && !textoActual.includes(":")) {
-                        reloj.innerText = formatearTextoHora(textoActual);
-                    }
-                }
-
-                // 2. Formatear horas de Inicio (Hijo 3) y Fin (Hijo 4) dentro de cada tarjeta
-                const tarjetas = document.querySelectorAll('#timespans .timeSpan');
-                tarjetas.forEach(tarjeta => {
-                    const campoInicio = tarjeta.children[2];
-                    const campoFin = tarjeta.children[3];
-                    const campoForzar = tarjeta.children[7]; // Muestra el rango "10 ~ 11"
-
-                    if (campoInicio) {
-                        const nodoTexto = campoInicio.childNodes[1] || campoInicio.childNodes[0];
-                        if (nodoTexto && nodoTexto.nodeValue && !nodoTexto.nodeValue.includes(":")) {
-                            nodoTexto.nodeValue = formatearTextoHora(nodoTexto.nodeValue);
-                        }
-                    }
-
-                    if (campoFin) {
-                        const nodoTexto = campoFin.childNodes[1] || campoFin.childNodes[0];
-                        if (nodoTexto && nodoTexto.nodeValue && !nodoTexto.nodeValue.includes(":")) {
-                            nodoTexto.nodeValue = formatearTextoHora(nodoTexto.nodeValue);
-                        }
-                    }
-
-                    // Formatear rango de forzado opcional si contiene horas pegadas (ej: 2230 ~ 1100)
-                    if (campoForzar) {
-                        const nodoTexto = campoForzar.childNodes[1] || campoForzar.childNodes[0];
-                        if (nodoTexto && nodoTexto.nodeValue && nodoTexto.nodeValue.includes("~")) {
-                            const partes = nodoTexto.nodeValue.split("~");
-                            if (partes[0].trim().length >= 3 || partes[1].trim().length >= 3) {
-                                nodoTexto.nodeValue = `${formatearTextoHora(partes[0])} ~ ${formatearTextoHora(partes[1])}`;
-                            }
-                        }
-                    }
-                });
-            };
-
-            // Ejecución continua muy ligera cada 400ms para ganarle al refresco dinámico de config.js
-            setInterval(procesarFormateoEstricto, 400);
-        })();
-    </script>
 </body>
 </html>
