@@ -4,28 +4,46 @@
   font-size: 14px;
 }
 
-body {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
 }
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f0f4f8; 
+  padding: 20px 12px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* --- SOLUCIÓN DEL ANCHO --- */
 .grid {
-  display: grid;
-  grid-template-columns: 1fr minmax(200px, 8fr) 1fr;
-  justify-items: center;
+  width: 100%;
+  max-width: 520px; /* Ancho exacto unificado con la pantalla de config */
+  margin: 0 auto;
 }
 
+.mobile-card {
+  width: 100%;
+  background: white;
+  border-radius: 18px; 
+  padding: 22px 16px;
+  text-align: center;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+/* Preservamos .container por si otra pantalla lo usa */
 .container {
-  grid-column-start: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  height: 100vh;
 }
+
 .hide {
   display: none;
 }
@@ -81,39 +99,21 @@ body {
   background-color: red;
 }
 
-.red {
-  color: red;
-  /* font-size: 1.5em; */
-}
-.blue {
-  color: blue;
-  /* font-size: 1.5em; */
-}
-.green {
-  color: green;
-}
-.gray {
-  color: gray;
-}
-
-.pointer {
-  cursor: pointer;
-}
+.red { color: red; }
+.blue { color: blue; }
+.green { color: green; }
+.gray { color: gray; }
+.pointer { cursor: pointer; }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  100% {
-    transform: scale(1.5);
-  }
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); } /* Suavizado para que no rompa el layout */
 }
 
 #displayBackendTime {
   font-size: 5em;
   font-weight: bold;
-  color:rgb(21, 21, 97);
+  color: rgb(21, 21, 97);
 }
 
 .title {
@@ -126,6 +126,7 @@ body {
   padding: 1em;
 }
 
+/* --- CONFIGURACIONES DE FRANJAS HORARIAS (Se mantienen intactas) --- */
 .timeSpan {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
@@ -152,13 +153,7 @@ body {
   border-radius: 3px;
   background-color: #efefef;
   padding: 0.3em 0.5em;
-
 }
 
-.tsSelected {
-  background-color: lightgrey;
-}
-
-.tsForced {
-  background-color: lightcoral;
-}
+.tsSelected { background-color: lightgrey; }
+.tsForced { background-color: lightcoral; }
