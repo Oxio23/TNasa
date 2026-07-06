@@ -1,6 +1,4 @@
-<!-- Restyling Phone Mod V3.1 - Deepseek 05072026 -->
-<!-- Restyling Phone Mod V3.1 - Deepseek 05072026 -->
-
+<!-- Restyling Phone Mod V4.0 - Deep+Gemi 06072026 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,722 +14,291 @@
     <link rel="icon" type="image/x-icon" href="favicons/favicon.ico">
     <script src="utils.js" defer></script>
     <script src="config.js" defer></script>
-    <link rel="stylesheet" href="styles.css" />
+    
     <style>
-        /* --- BASE --- */
+        /* --- RESET Y BASE --- */
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f5f5f5 !important;
-            margin: 0 !important;
-            padding: 20px 10px !important;
-            color: #333 !important;
-            display: flex !important;
-            justify-content: center !important;
+            background: #f0f4f8;
+            padding: 20px 12px;
+            color: #1e293b;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .grid {
-            width: 80% !important;
-            max-width: 500px !important;
-            margin: 0 auto !important;
-            display: block !important;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
         }
+        
         .container {
-            width: 100% !important;
-            display: block !important;
+            width: 100%;
         }
 
-        /* --- RELOJ --- */
+        /* --- RELOJ MEJORADO --- */
         #clock {
-            background: #1a237e !important;
-            border-radius: 12px !important;
-            padding: 16px 10px !important;
-            text-align: center !important;
-            margin: 0 0 20px 0 !important;
-            box-shadow: 0 4px 12px rgba(26,35,126,0.15) !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            border-radius: 16px;
+            padding: 18px 10px 14px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(26,35,126,0.20);
+            position: relative;
+            overflow: hidden;
         }
+        
         #clock div:first-child {
-            color: rgba(255, 255, 255, 0.75) !important;
-            font-size: 0.85em !important;
-            text-transform: uppercase !important;
-            letter-spacing: 1.5px !important;
-            margin-bottom: 4px !important;
-            font-weight: 600 !important;
-            background: none !important;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+            font-weight: 600;
         }
+        
         #displayBackendTime {
-            color: #ffffff !important;
-            font-size: 2.6em !important;
-            font-weight: bold !important;
-            font-variant-numeric: tabular-nums !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            background: none !important;
-            letter-spacing: 2px !important;
-            display: inline-block !important;
+            color: #ffffff;
+            font-size: 2.8em;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        /* --- OCULTAR CABECERA DE TABLA --- */
+        /* --- OCULTAR CABECERA ORIGINAL --- */
         .timeSpan.title {
             display: none !important;
         }
 
+        /* --- CONTENEDOR DE TARJETAS --- */
         #timespans {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        /* --- TRANSFORMACIÓN A TARJETAS MODERNAS --- */
+        #timespans .timeSpan {
+            background: white !important;
+            border: 1px solid #e8edf4 !important;
+            border-radius: 18px !important;
+            padding: 18px 16px 16px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+            position: relative !important;
+            width: 100% !important;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+            
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 14px 16px !important;
+            align-items: start !important;
+        }
+
+        #timespans .timeSpan:hover {
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06) !important;
+        }
+
+        /* --- ESTILO DE LOS CONTENEDORES INTERNOS --- */
+        #timespans .timeSpan > * {
             display: flex !important;
             flex-direction: column !important;
-            gap: 14px !important;
-            width: 100% !important;
-        }
-
-        /* --- TARJETA COMPACTA --- */
-        .timeSpan {
-            background: white !important;
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 14px !important;
-            padding: 16px !important;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.03) !important;
-            position: relative !important;
-            overflow: hidden !important;
-            box-sizing: border-box !important;
-            width: 100% !important;
-            display: grid !important;
-            grid-template-columns: auto 1fr !important;
-            align-items: center !important;
-            column-gap: 12px !important;
-            row-gap: 8px !important;
-        }
-
-        /* ID de prioridad */
-        .timeSpan .prioridad-badge {
-            grid-column: 1 !important;
-            grid-row: 1 !important;
-            background: #e2e8f0 !important;
-            color: #475569 !important;
-            font-weight: 700 !important;
-            border-radius: 6px !important;
-            padding: 4px 8px !important;
-            font-size: 0.8em !important;
-            margin: 0 !important;
-            display: inline-block !important;
-            justify-self: start !important;
-        }
-
-        /* Nombre del modo */
-        .timeSpan .nombre-modo {
-            grid-column: 2 !important;
-            grid-row: 1 !important;
-            font-weight: bold !important;
-            font-size: 1.25em !important;
-            color: #1e293b !important;
-            margin: 0 !important;
-            text-align: left !important;
-        }
-
-        /* Horario: inicio y fin */
-        .timeSpan .hora-inicio {
-            grid-column: 1 !important;
-            grid-row: 2 !important;
-            font-size: 0.95em !important;
-            color: #64748b !important;
-            margin: 8px 0 0 0 !important;
-            padding: 0 !important;
-            background: none !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            white-space: nowrap !important;
-            width: auto !important;
-        }
-        .timeSpan .hora-inicio::before {
-            content: "🕒 Horario: ";
-            font-weight: 500;
-            margin-right: 4px !important;
-        }
-        .timeSpan .hora-fin {
-            grid-column: 2 !important;
-            grid-row: 2 !important;
-            font-size: 0.95em !important;
-            color: #64748b !important;
-            margin: 8px 0 0 0 !important; 
-            padding: 0 !important;
-            background: none !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            white-space: nowrap !important;
-            justify-self: start !important;
-            width: auto !important;
-        }
-        .timeSpan .hora-fin::before {
-            content: "a";
-            margin-left: 6px !important;
-            margin-right: 6px !important;
-            color: #64748b !important;
-            font-weight: 500 !important;
-        }
-
-        /* Estado Activo */
-        .timeSpan .estado-activo {
-            grid-column: 1 / span 2 !important;
-            grid-row: 3 !important;
-            font-weight: 600 !important;
-            color: #10b981 !important;
-            background: #ecfdf5 !important;
-            padding: 4px 10px !important;
-            border-radius: 6px !important;
-            font-size: 0.85em !important;
-            margin: 2px 0 0 0 !important;
-            justify-self: start !important;
-            display: inline-block !important;
-        }
-
-        /* Temperatura (clickeable) */
-        .timeSpan .temp-display {
-            grid-column: 1 / span 2 !important;
-            grid-row: 4 !important;
-            background: #f1f8e9 !important;
-            border: 2px solid #c5e1a5 !important;
-            color: #33691e !important;
-            font-weight: bold !important;
-            padding: 6px 14px !important;
-            border-radius: 8px !important;
-            font-size: 1em !important;
-            margin: 4px 0 0 0 !important;
-            justify-self: start !important;
-            display: inline-block !important;
-            cursor: pointer !important;
-            transition: all 0.2s ease !important;
-            user-select: none !important;
-            min-width: 60px !important;
-            text-align: center !important;
-            pointer-events: auto !important;
-        }
-        .timeSpan .temp-display:hover {
-            background: #dcedc8 !important;
-            transform: scale(1.02) !important;
-        }
-        .timeSpan .temp-display:active {
-            transform: scale(0.98) !important;
-        }
-
-        /* Contenedor de edición de temperatura */
-        .timeSpan .temp-edit-container {
-            grid-column: 1 / span 2 !important;
-            grid-row: 4 !important;
-            display: none !important;
-            margin: 4px 0 0 0 !important;
-            gap: 8px !important;
-            align-items: center !important;
-            flex-wrap: wrap !important;
-            justify-self: start !important;
-            pointer-events: auto !important;
-        }
-        .timeSpan .temp-edit-container.active {
-            display: flex !important;
-        }
-
-        .timeSpan .temp-input-group {
-            display: flex !important;
-            align-items: center !important;
-            gap: 4px !important;
-            background: white !important;
-            border: 2px solid #4caf50 !important;
-            border-radius: 8px !important;
-            padding: 2px 8px !important;
-        }
-        .timeSpan .temp-input-group label {
-            font-size: 0.8em !important;
-            font-weight: 600 !important;
-            color: #475569 !important;
-            margin: 0 !important;
-        }
-        .timeSpan .temp-input-group input {
-            width: 40px !important;
-            padding: 4px 2px !important;
-            border: none !important;
-            border-radius: 4px !important;
-            font-size: 1em !important;
-            font-weight: bold !important;
-            text-align: center !important;
-            background: transparent !important;
-            color: #1e293b !important;
-            outline: none !important;
-            pointer-events: auto !important;
-        }
-        .timeSpan .temp-input-group input:focus {
-            background: #f0f9ff !important;
-            border-radius: 4px !important;
-        }
-        .timeSpan .temp-input-group .separator {
-            font-weight: bold !important;
-            color: #94a3b8 !important;
-            margin: 0 2px !important;
-        }
-
-        .timeSpan .temp-edit-buttons {
-            display: flex !important;
             gap: 6px !important;
-        }
-        .timeSpan .temp-edit-buttons button {
-            padding: 4px 12px !important;
-            border: none !important;
-            border-radius: 6px !important;
+            font-size: 0.75em !important;
             font-weight: 600 !important;
-            font-size: 0.85em !important;
-            cursor: pointer !important;
-            transition: all 0.2s ease !important;
-            pointer-events: auto !important;
-        }
-        .timeSpan .temp-edit-buttons .btn-save {
-            background: #10b981 !important;
-            color: white !important;
-        }
-        .timeSpan .temp-edit-buttons .btn-save:hover {
-            background: #059669 !important;
-        }
-        .timeSpan .temp-edit-buttons .btn-cancel {
-            background: #e2e8f0 !important;
-            color: #475569 !important;
-        }
-        .timeSpan .temp-edit-buttons .btn-cancel:hover {
-            background: #cbd5e1 !important;
+            color: #64748b !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.6px !important;
+            
+            /* Destacamos los valores modificables del backend (Textos nativos) */
+            font-size: 1.1em !important; 
+            font-weight: 700 !important;
+            color: #0f172a !important; 
         }
 
-        .timeSpan .temp-display.hidden {
-            display: none !important;
+        /* Re-maquetación de labels (mantienen un tamaño sutil arriba del valor) */
+        #timespans .timeSpan > *::before {
+            font-size: 0.68rem !important;
+            font-weight: 600 !important;
+            color: #64748b !important;
+            letter-spacing: 0.5px !important;
+            margin-bottom: -2px !important;
         }
 
-        /* Ocultar campos originales (se usan para almacenar valores) */
-        .timeSpan .tempmin, 
-        .timeSpan .tempmax,
-        .timeSpan .enabled,
-        .timeSpan .force,
-        .timeSpan .starttime,
-        .timeSpan .endtime,
-        .timeSpan .name {
-            display: none !important;
+        #timespans .timeSpan > *:nth-child(1)::before { content: "🔢 PRIORIDAD"; }
+        #timespans .timeSpan > *:nth-child(2)::before { content: "📌 NOMBRE"; }
+        #timespans .timeSpan > *:nth-child(3)::before { content: "⏰ INICIO"; }
+        #timespans .timeSpan > *:nth-child(4)::before { content: "⏰ FIN"; }
+        #timespans .timeSpan > *:nth-child(5)::before { content: "🌡️ MÍNIMA"; }
+        #timespans .timeSpan > *:nth-child(6)::before { content: "🌡️ MÁXIMA"; }
+        #timespans .timeSpan > *:nth-child(7)::before { content: "✅ ACTIVO"; }
+        #timespans .timeSpan > *:nth-child(8)::before { content: "⚡ FORZAR"; }
+
+        /* Color especial para estados booleanos legibles a primera vista */
+        #timespans .timeSpan > *:nth-child(7) {
+            color: #1a237e !important;
         }
 
-        /* --- ESTADOS VISUALES --- */
-        .timeSpan.tsSelected {
+        /* --- BADGES DE ESTADO (VIGENTE / FORZADO) --- */
+        #timespans .timeSpan.tsSelected {
             border-color: #10b981 !important;
-            background-color: #f6fdfa !important;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
         }
-        .timeSpan.tsSelected .prioridad-badge {
-            background: #10b981 !important;
-            color: white !important;
-        }
-        .timeSpan.tsSelected::after {
-            content: "ACTIVA";
+        
+        #timespans .timeSpan.tsSelected::after {
+            content: "🔵 VIGENTE";
             position: absolute;
             top: 0;
             right: 0;
             background: #10b981;
             color: white;
-            font-size: 0.65em;
-            font-weight: bold;
-            padding: 4px 12px;
+            font-size: 0.55em;
+            font-weight: 700;
+            padding: 4px 10px;
             border-bottom-left-radius: 10px;
+            border-top-right-radius: 16px;
+            letter-spacing: 0.5px;
         }
 
-        .timeSpan.tsForced {
+        #timespans .timeSpan.tsForced {
             border-color: #ef4444 !important;
-            background-color: #fef2f2 !important;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
         }
-        .timeSpan.tsForced .prioridad-badge {
-            background: #ef4444 !important;
-            color: white !important;
-        }
-        .timeSpan.tsForced .temp-display {
-            background: #ef4444 !important;
-            border-color: #ef4444 !important;
-            color: white !important;
-        }
-        .timeSpan.tsForced::after {
-            content: "FORZADA";
+        
+        #timespans .timeSpan.tsForced::after {
+            content: "🔴 FORZADO";
             position: absolute;
             top: 0;
             right: 0;
             background: #ef4444;
             color: white;
-            font-size: 0.65em;
-            font-weight: bold;
-            padding: 4px 12px;
+            font-size: 0.55em;
+            font-weight: 700;
+            padding: 4px 10px;
             border-bottom-left-radius: 10px;
+            border-top-right-radius: 16px;
+            letter-spacing: 0.5px;
         }
 
-        /* Botón Volver */
+        /* --- RESPONSIVE --- */
+        @media (max-width: 460px) {
+            #timespans .timeSpan {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px 10px !important;
+                padding: 14px 12px !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            #timespans .timeSpan {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         .btn-back {
             display: block !important;
             text-align: center !important;
-            background: #e2e8f0 !important;
+            background: #e8edf4 !important;
             color: #334155 !important;
             text-decoration: none !important;
-            padding: 12px !important;
-            border-radius: 12px !important;
-            font-weight: bold !important;
-            margin: 25px 0 10px 0 !important;
+            padding: 14px !important;
+            border-radius: 14px !important;
+            font-weight: 600 !important;
+            margin: 28px 0 8px 0 !important;
             font-size: 0.95em !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
+            transition: all 0.2s ease !important;
         }
     </style>
 </head>
 <body>
     <div class="grid">
         <div class="container">
-            <!-- Reloj -->
             <div id="clock">
-                <div>Hora del Servidor</div>
+                <div>Hora del Sistema</div>
                 <div id="displayBackendTime">0000</div>
             </div>
 
-            <!-- Cabecera oculta (se mantiene por compatibilidad) -->
             <div class="timeSpan title">
-                <div>Prioridad</div>
-                <div>Nombre</div>
-                <div>Hora Inicio</div>
-                <div>Hora Fin</div>
-                <div>Temp Mínima</div>
-                <div>Temp Máxima</div>
-                <div>Activo</div>
-                <div>Forzar</div>
+                <div>Prioridad</div><div>Nombre</div><div>Hora Inicio</div><div>Hora Fin</div><div>Temp Mínima</div><div>Temp Máxima</div><div>Activo</div><div>Forzar</div>
             </div>
 
-            <!-- Render de tarjetas -->
             <div id="timespans"></div>
 
-            <!-- Botón Volver -->
             <a href="index.html" class="btn-back">⬅ Volver al Panel</a>
         </div>
     </div>
 
-    <!-- Script para transformar las filas en tarjetas compactas con edición de temperatura -->
     <script>
         (function() {
-            let configurado = false;
-
-            // Formatear hora con ":"
-            const formatearConDosPuntos = (texto) => {
-                if (!texto) return texto;
-                if (/^\d{1,2}:\d{2}$/.test(texto)) return texto;
-                let limpio = texto.replace(/[:,\s]/g, '');
-                if (limpio.length === 3) return limpio.substring(0, 1) + ":" + limpio.substring(1);
-                if (limpio.length === 4) return limpio.substring(0, 2) + ":" + limpio.substring(2);
-                if (limpio.length === 2) return limpio.substring(0, 1) + ":" + limpio.substring(1);
+            // Convierte strings como "856" en "08:56" y "2230" en "22:30"
+            const formatearTextoHora = (texto) => {
+                let limpio = texto.replace(/[:,\s]/g, '').trim();
+                if (!/^\d+$/.test(limpio)) return texto; 
+                
+                // Rellenar con ceros a la izquierda si tiene 3 dígitos (ej: 856 -> 0856)
+                if (limpio.length === 3) limpio = '0' + limpio;
+                
+                if (limpio.length === 4) {
+                    return limpio.substring(0, 2) + ":" + limpio.substring(2);
+                }
                 return texto;
             };
 
-            // Transformar las filas generadas por config.js en tarjetas compactas
-            const transformarATarjetas = () => {
-                const timespans = document.getElementById('timespans');
-                if (!timespans) return;
-
-                const filas = timespans.querySelectorAll('.timeSpan:not(.title)');
-                if (filas.length === 0) return;
-
-                filas.forEach(fila => {
-                    // Extraer datos de los elementos originales
-                    const prioridadElem = fila.querySelector('div:first-child');
-                    const nombreElem = fila.querySelector('.name') || fila.querySelector('div:nth-child(2)');
-                    const inicioElem = fila.querySelector('.starttime') || fila.querySelector('div:nth-child(3)');
-                    const finElem = fila.querySelector('.endtime') || fila.querySelector('div:nth-child(4)');
-                    const tempMinElem = fila.querySelector('.tempmin') || fila.querySelector('div:nth-child(5)');
-                    const tempMaxElem = fila.querySelector('.tempmax') || fila.querySelector('div:nth-child(6)');
-                    const activoElem = fila.querySelector('.enabled') || fila.querySelector('div:nth-child(7)');
-                    const forzarElem = fila.querySelector('.force') || fila.querySelector('div:nth-child(8)');
-
-                    // Obtener valores
-                    const prioridad = prioridadElem ? prioridadElem.textContent.trim() : '1';
-                    const nombre = nombreElem ? nombreElem.textContent.trim() : 'Modo';
-                    let inicio = inicioElem ? inicioElem.textContent.trim() : '00:00';
-                    let fin = finElem ? finElem.textContent.trim() : '00:00';
-                    let tempMin = tempMinElem ? tempMinElem.textContent.trim() : '20';
-                    let tempMax = tempMaxElem ? tempMaxElem.textContent.trim() : '25';
-                    const activo = activoElem ? activoElem.textContent.trim().toLowerCase() === 'true' : true;
-                    const forzado = forzarElem ? forzarElem.textContent.trim().toLowerCase() === 'true' : false;
-
-                    // Formatear horas
-                    inicio = formatearConDosPuntos(inicio);
-                    fin = formatearConDosPuntos(fin);
-
-                    // Limpiar fila y reconstruir como tarjeta
-                    fila.innerHTML = '';
-
-                    // Badge prioridad
-                    const badge = document.createElement('span');
-                    badge.className = 'prioridad-badge';
-                    badge.textContent = prioridad;
-                    fila.appendChild(badge);
-
-                    // Nombre
-                    const nombreSpan = document.createElement('span');
-                    nombreSpan.className = 'nombre-modo';
-                    nombreSpan.textContent = nombre;
-                    fila.appendChild(nombreSpan);
-
-                    // Hora inicio
-                    const inicioSpan = document.createElement('span');
-                    inicioSpan.className = 'hora-inicio';
-                    inicioSpan.textContent = inicio;
-                    fila.appendChild(inicioSpan);
-
-                    // Hora fin
-                    const finSpan = document.createElement('span');
-                    finSpan.className = 'hora-fin';
-                    finSpan.textContent = fin;
-                    fila.appendChild(finSpan);
-
-                    // Estado activo
-                    const estadoSpan = document.createElement('span');
-                    estadoSpan.className = 'estado-activo';
-                    estadoSpan.textContent = activo ? '✅ Activo' : '⛔ Inactivo';
-                    fila.appendChild(estadoSpan);
-
-                    // Display de temperatura (clickeable)
-                    const tempDisplay = document.createElement('span');
-                    tempDisplay.className = 'temp-display';
-                    tempDisplay.textContent = `🌡️ ${tempMin}~${tempMax}`;
-                    fila.appendChild(tempDisplay);
-
-                    // Almacenar valores originales en atributos data
-                    fila.dataset.tempMin = tempMin;
-                    fila.dataset.tempMax = tempMax;
-                    fila.dataset.forzado = forzado;
-
-                    // Campos ocultos para mantener compatibilidad con la lógica original
-                    const hiddenMin = document.createElement('span');
-                    hiddenMin.className = 'tempmin';
-                    hiddenMin.textContent = tempMin;
-                    hiddenMin.style.display = 'none';
-                    fila.appendChild(hiddenMin);
-
-                    const hiddenMax = document.createElement('span');
-                    hiddenMax.className = 'tempmax';
-                    hiddenMax.textContent = tempMax;
-                    hiddenMax.style.display = 'none';
-                    fila.appendChild(hiddenMax);
-
-                    const hiddenForzar = document.createElement('span');
-                    hiddenForzar.className = 'force';
-                    hiddenForzar.textContent = forzado;
-                    hiddenForzar.style.display = 'none';
-                    fila.appendChild(hiddenForzar);
-
-                    const hiddenActivo = document.createElement('span');
-                    hiddenActivo.className = 'enabled';
-                    hiddenActivo.textContent = activo;
-                    hiddenActivo.style.display = 'none';
-                    fila.appendChild(hiddenActivo);
-
-                    const hiddenStart = document.createElement('span');
-                    hiddenStart.className = 'starttime';
-                    hiddenStart.textContent = inicio;
-                    hiddenStart.style.display = 'none';
-                    fila.appendChild(hiddenStart);
-
-                    const hiddenEnd = document.createElement('span');
-                    hiddenEnd.className = 'endtime';
-                    hiddenEnd.textContent = fin;
-                    hiddenEnd.style.display = 'none';
-                    fila.appendChild(hiddenEnd);
-
-                    const hiddenName = document.createElement('span');
-                    hiddenName.className = 'name';
-                    hiddenName.textContent = nombre;
-                    hiddenName.style.display = 'none';
-                    fila.appendChild(hiddenName);
-
-                    // Aplicar clases de estado
-                    if (activo) fila.classList.add('tsSelected');
-                    if (forzado) fila.classList.add('tsForced');
-
-                    // --- Configurar edición de temperatura ---
-                    configurarEdicionTemperatura(fila);
-                });
-
-                // Formatear el reloj
-                const reloj = document.getElementById("displayBackendTime");
+            const procesarFormateoEstricto = () => {
+                // 1. Formatear el Reloj principal
+                const reloj = document.getElementById('displayBackendTime');
                 if (reloj) {
-                    const textoOriginal = reloj.innerText.trim();
-                    const formateado = formatearConDosPuntos(textoOriginal);
-                    if (reloj.innerText !== formateado) {
-                        reloj.innerText = formateado;
+                    const textoActual = reloj.childNodes[0]?.nodeValue || reloj.innerText;
+                    if (textoActual && !textoActual.includes(":")) {
+                        reloj.innerText = formatearTextoHora(textoActual);
                     }
                 }
-            };
 
-            // Configurar la edición de temperatura para una tarjeta
-            const configurarEdicionTemperatura = (card) => {
-                const tempDisplay = card.querySelector('.temp-display');
-                const tempMin = card.querySelector('.tempmin');
-                const tempMax = card.querySelector('.tempmax');
-                const force = card.querySelector('.force');
+                // 2. Formatear horas de Inicio (Hijo 3) y Fin (Hijo 4) dentro de cada tarjeta
+                const tarjetas = document.querySelectorAll('#timespans .timeSpan');
+                tarjetas.forEach(tarjeta => {
+                    const campoInicio = tarjeta.children[2];
+                    const campoFin = tarjeta.children[3];
+                    const campoForzar = tarjeta.children[7]; // Muestra el rango "10 ~ 11"
 
-                if (!tempDisplay || !tempMin || !tempMax) return;
-
-                // Crear contenedor de edición
-                const editContainer = document.createElement('div');
-                editContainer.className = 'temp-edit-container';
-
-                // Input mínimo
-                const minGroup = document.createElement('div');
-                minGroup.className = 'temp-input-group';
-                minGroup.innerHTML = `
-                    <label>Min</label>
-                    <input type="number" class="temp-min-input" min="0" max="60" value="${tempMin.textContent}">
-                `;
-
-                // Separador
-                const separator = document.createElement('span');
-                separator.className = 'separator';
-                separator.textContent = '~';
-
-                // Input máximo
-                const maxGroup = document.createElement('div');
-                maxGroup.className = 'temp-input-group';
-                maxGroup.innerHTML = `
-                    <label>Max</label>
-                    <input type="number" class="temp-max-input" min="0" max="60" value="${tempMax.textContent}">
-                `;
-
-                // Botones
-                const buttons = document.createElement('div');
-                buttons.className = 'temp-edit-buttons';
-                buttons.innerHTML = `
-                    <button class="btn-save">✓ Guardar</button>
-                    <button class="btn-cancel">✕ Cancelar</button>
-                `;
-
-                editContainer.appendChild(minGroup);
-                editContainer.appendChild(separator);
-                editContainer.appendChild(maxGroup);
-                editContainer.appendChild(buttons);
-
-                // Insertar después de temp-display
-                tempDisplay.parentNode.insertBefore(editContainer, tempDisplay.nextSibling);
-
-                // Referencias
-                const container = editContainer;
-                const minInput = container.querySelector('.temp-min-input');
-                const maxInput = container.querySelector('.temp-max-input');
-                const btnSave = container.querySelector('.btn-save');
-                const btnCancel = container.querySelector('.btn-cancel');
-
-                // Evento click en temp-display
-                tempDisplay.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    // Obtener valores actuales
-                    const currentText = this.textContent.trim();
-                    const match = currentText.match(/(\d+)~\s*(\d+)/);
-
-                    if (match) {
-                        minInput.value = parseInt(match[1]);
-                        maxInput.value = parseInt(match[2]);
-                    } else {
-                        minInput.value = tempMin.textContent || 20;
-                        maxInput.value = tempMax.textContent || 25;
+                    if (campoInicio) {
+                        const nodoTexto = campoInicio.childNodes[1] || campoInicio.childNodes[0];
+                        if (nodoTexto && nodoTexto.nodeValue && !nodoTexto.nodeValue.includes(":")) {
+                            nodoTexto.nodeValue = formatearTextoHora(nodoTexto.nodeValue);
+                        }
                     }
 
-                    // Mostrar edición
-                    this.classList.add('hidden');
-                    container.classList.add('active');
-                    setTimeout(() => minInput.focus(), 100);
-                });
-
-                // Guardar cambios
-                const guardarCambios = () => {
-                    const min = parseInt(minInput.value);
-                    const max = parseInt(maxInput.value);
-
-                    if (isNaN(min) || isNaN(max)) {
-                        alert('Por favor, ingresa números válidos');
-                        return;
+                    if (campoFin) {
+                        const nodoTexto = campoFin.childNodes[1] || campoFin.childNodes[0];
+                        if (nodoTexto && nodoTexto.nodeValue && !nodoTexto.nodeValue.includes(":")) {
+                            nodoTexto.nodeValue = formatearTextoHora(nodoTexto.nodeValue);
+                        }
                     }
 
-                    if (min < 0 || min > 60 || max < 0 || max > 60) {
-                        alert('La temperatura debe estar entre 0 y 60 grados');
-                        return;
+                    // Formatear rango de forzado opcional si contiene horas pegadas (ej: 2230 ~ 1100)
+                    if (campoForzar) {
+                        const nodoTexto = campoForzar.childNodes[1] || campoForzar.childNodes[0];
+                        if (nodoTexto && nodoTexto.nodeValue && nodoTexto.nodeValue.includes("~")) {
+                            const partes = nodoTexto.nodeValue.split("~");
+                            if (partes[0].trim().length >= 3 || partes[1].trim().length >= 3) {
+                                nodoTexto.nodeValue = `${formatearTextoHora(partes[0])} ~ ${formatearTextoHora(partes[1])}`;
+                            }
+                        }
                     }
-
-                    if (min >= max) {
-                        alert('La temperatura mínima debe ser menor que la máxima');
-                        minInput.focus();
-                        return;
-                    }
-
-                    // Actualizar elementos
-                    tempDisplay.textContent = `🌡️ ${min}~${max}`;
-                    tempMin.textContent = min;
-                    tempMax.textContent = max;
-
-                    // Cerrar edición
-                    container.classList.remove('active');
-                    tempDisplay.classList.remove('hidden');
-                };
-
-                // Cancelar
-                const cancelarCambios = () => {
-                    container.classList.remove('active');
-                    tempDisplay.classList.remove('hidden');
-                };
-
-                // Eventos de botones
-                btnSave.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    guardarCambios();
-                });
-
-                btnCancel.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    cancelarCambios();
-                });
-
-                // Teclas
-                minInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        maxInput.focus();
-                    }
-                    if (e.key === 'Escape') cancelarCambios();
-                });
-
-                maxInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        guardarCambios();
-                    }
-                    if (e.key === 'Escape') cancelarCambios();
                 });
             };
 
-            // Inicialización
-            const inicializar = () => {
-                if (configurado) return;
-                console.log('🚀 Transformando a tarjetas compactas...');
-                transformarATarjetas();
-                configurado = true;
-                console.log('✅ Configuración completada');
-            };
-
-            // Ejecutar después de que config.js cargue
-            if (document.readyState === 'complete') {
-                setTimeout(inicializar, 300);
-            } else {
-                document.addEventListener("DOMContentLoaded", () => {
-                    setTimeout(inicializar, 300);
-                });
-            }
-
-            window.addEventListener('load', () => {
-                setTimeout(inicializar, 400);
-            });
-
-            console.log('📱 Modo tarjetas compactas con edición de temperatura');
+            // Ejecución continua muy ligera cada 400ms para ganarle al refresco dinámico de config.js
+            setInterval(procesarFormateoEstricto, 400);
         })();
     </script>
 </body>
