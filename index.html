@@ -1,4 +1,5 @@
-<!-- HTML V2.1 03072026 -->
+<!-- HTML V3.1 0672026 -->
+
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -15,22 +16,43 @@
     <script src="utils.js" defer></script>
     <script src="index.js" defer></script>
     <style>
+      /* --- RESET Y BASE --- */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 10px;
+        background-color: #f0f4f8; 
+        padding: 20px 12px;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
       }
-      .mobile-card {
+
+      /* Grid unificada para el ancho correcto */
+      .grid {
+        width: 100% !important;
+        max-width: 520px !important; 
+        margin: 0 auto !important;
+      }
+
+      /* Forzado estricto del ancho de la tarjeta */
+      body .grid .mobile-card {
+        width: 100% !important;
+        max-width: 100% !important; 
+        box-sizing: border-box !important;
         background: white;
-        border-radius: 15px;
-        padding: 25px 15px;
-        max-width: 450px;
-        margin: 20px auto;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-radius: 18px; 
+        padding: 22px 16px;
         text-align: center;
+        border: 1px solid #e8edf4;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
       }
-      /* Contenedor flexible para alinear el número y el símbolo de grado al centro */
+      
+      /* Contenedor flexible de temperatura */
       .temp-container {
         display: flex;
         justify-content: center;
@@ -38,7 +60,7 @@
         font-size: 5.5em;
         font-weight: bold;
         margin: 15px 0;
-        color: #1a237e; /* Azul oscuro estético para el número */
+        color: #1a237e; 
         letter-spacing: -2px;
       }
       .temp-degree {
@@ -46,7 +68,7 @@
         margin-left: 2px;
         margin-top: 10px;
       }
-      /* Barra de estado tipo la de humedad de referencia */
+      /* Barra de estado */
       .status-bar {
         background-color: #e3f2fd;
         border: 1px solid #bbdefb;
@@ -61,15 +83,16 @@
         gap: 12px;
       }
       .status-bar img {
-        max-height: 32px; /* Más compacta para integrarse en la línea */
+        max-height: 32px; 
       }
       .version-box {
-        background: #f0f0f0;
-        border-radius: 8px;
-        padding: 8px;
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 10px;
         font-size: 0.85em;
-        color: #555;
+        color: #64748b;
         margin: 15px 0;
+        border: 1px solid #e2e8f0;
       }
       .button-group {
         display: flex;
@@ -79,9 +102,9 @@
       }
       .btn-nav {
         flex: 1;
-        padding: 12px 8px;
+        padding: 14px 8px; 
         border: none;
-        border-radius: 8px;
+        border-radius: 12px;
         color: white;
         font-weight: bold;
         font-size: 0.9em;
@@ -89,6 +112,10 @@
         display: inline-block;
         cursor: pointer;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.15s ease;
+      }
+      .btn-nav:hover {
+        transform: translateY(-1px);
       }
       .btn-orange { background-color: #ff9800; }
       .btn-green { background-color: #2ecc71; }
@@ -96,26 +123,26 @@
       .hide { display: none; }
     </style>
   </head>
-  <body>
-
+<body>
     <div class="grid">
+      <!-- Le devolvemos la clase .container por si el JS la busca ahí -->
       <div class="container mobile-card">
         
         <!-- Logos -->
-        <h2 id="termoNasaLogo" style="font-style: italic; font-size: 1.8em; margin: 5px 0;">
+        <h2 id="termoNasaLogo" style="font-style: italic; font-size: 1.8em; margin: 5px 0 10px 0;">
           <span style="color: red">Termo</span>NASA
         </h2>
-        <h2 id="helaNasaLogo" class="hide" style="font-style: italic; font-size: 1.8em; margin: 5px 0;">
+        <h2 id="helaNasaLogo" class="hide" style="font-style: italic; font-size: 1.8em; margin: 5px 0 10px 0;">
           <span style="color: blue">Hela</span>NASA
         </h2>
 
-        <!-- Temperatura Centrada con Flexbox -->
+        <!-- Temperatura Centrada -->
         <div class="temp-container">
           <span id="temperature">0.0</span>
           <span class="temp-degree">º</span>
         </div>
 
-        <!-- Nueva Píldora de Estado (Reemplaza la sección vieja del motor desalineado) -->
+        <!-- Píldora de Estado -->
         <div class="status-bar" id="engine">
           <div style="display: flex; align-items: center;">
             <img src="engineOn.png" id="engineOn" class="hide pulse" />
@@ -135,8 +162,8 @@
 
         <!-- Info de Franja Activa y Versiones -->
         <div class="version-box">
-          <div>Franja activa: <span id="dispActiveTimeSpan">Default</span><span id="dispActiveTimeForced" class="red"></span></div>
-          <div style="font-size: 0.85em; margin-top: 4px; color: #888;">
+          <div>Franja activa: <span id="dispActiveTimeSpan" style="font-weight: 700; color: #0f172a;">Default</span><span id="dispActiveTimeForced" class="red"></span></div>
+          <div style="font-size: 0.82em; margin-top: 6px; color: #94a3b8;">
             Front: v2.2.2 | Back: v<span id="dispBackendVersion">0</span>
           </div>
         </div>
@@ -152,19 +179,4 @@
 
       </div>
     </div>
-
-    <script>
-      function toggleEngine() {
-        const engineOn = document.getElementById('engineOn');
-        const engineOff = document.getElementById('engineOff');
-        if(engineOn && engineOff) {
-          if(engineOn.classList.contains('hide')) {
-            engineOff.click();
-          } else {
-            engineOn.click();
-          }
-        }
-      }
-    </script>
   </body>
-</html>
